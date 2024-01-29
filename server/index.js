@@ -7,6 +7,27 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 mongoose.connect("mongodb://127.0.0.1:27017/employee");
+
+// this for fetching employee namewe
+app.post("/getUserInfo", (req, res) => {
+  const { email } = req.body;
+  EmployeeModel.findOne({ email: email })
+    .then((user) => {
+      if (user) {
+        res.json({ success: true, name: user.name, email: user.email });
+      } else {
+        res.json({ success: false, message: "User not found" });
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching user information:", error.message);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    });
+});
+// end
+
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   EmployeeModel.findOne({ email: email }).then((user) => {
