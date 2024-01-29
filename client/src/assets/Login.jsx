@@ -53,6 +53,11 @@ const Login = () => {
           />
         </div>
         <button type="submit">Login</button>
+        <br /> <br />
+        Not registered yet!! <br />
+        <button>
+          <Link to="/register">Register Now</Link>
+        </button>
       </form>
     </div>
   );

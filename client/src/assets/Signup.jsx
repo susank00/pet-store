@@ -21,6 +21,7 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <form className="login-form" onSubmit={handleSubmit}>
+        <h1>Register Here</h1>
         <div>
           <label>
             NAME:
@@ -56,12 +57,13 @@ const Signup = () => {
           />
         </div>
         <button type="submit">Register</button>
+        <br /> <br />
+        Already registered!!
+        <br />
+        <button>
+          <Link to="/login">Login here</Link>
+        </button>
       </form>
-      Already registered!!
-      <br />
-      <button>
-        <Link to="/login">Login here</Link>
-      </button>
     </div>
   );
 };
