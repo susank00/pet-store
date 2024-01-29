@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 
-const Home = () => {
+const Profile = () => {
   const location = useLocation();
   const [name, setName] = useState("");
   const userEmail = location.state && location.state.email;
@@ -36,4 +36,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Profile;

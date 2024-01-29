@@ -14,14 +14,22 @@ const Login = () => {
       .then((result) => {
         console.log(result);
         if (result.data === "success") {
-          navigate("/home", { state: { email } });
+          navigate("/profile", { state: { email } });
+        } else {
+          // Show an alert for unsuccessful login
+          alert(response.data.errors[0].message);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        // Show an alert for any other errors
+        alert("An error occurred. Please try again later.");
+      });
   };
   return (
     <div className="signup-container">
       <form className="login-form" onSubmit={handleSubmit}>
+        <h2>User Login</h2>
         <div>
           <label>
             EMAIL:
