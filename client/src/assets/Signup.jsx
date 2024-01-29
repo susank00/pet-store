@@ -12,11 +12,19 @@ const Signup = () => {
     e.preventDefault();
     axios
       .post("http://localhost:3001/register", { name, email, password })
-      .then((result) => {
-        console.log(result);
-        navigate("/login");
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.success) {
+          navigate("/login", { state: { email } });
+        } else {
+          alert(response.data.message);
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        // Show an alert for any other errors
+        alert("An error occurred. Please try again later.");
+      });
   };
   return (
     <div className="signup-container">

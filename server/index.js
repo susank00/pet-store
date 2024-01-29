@@ -28,6 +28,7 @@ app.post("/getUserInfo", (req, res) => {
 });
 // end
 
+// for login panel validation login
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -70,7 +71,19 @@ app.post("/login", (req, res) => {
         .json({ success: false, message: "Internal server error" });
     });
 });
-app.post("/register", (req, res) => {
+
+// end-->>>>>>>>>>>>>
+
+// for registration portal login >>>>>>>>>>
+app.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
+  const existingUser = await EmployeeModel.findOne({ email });
+  if (existingUser) {
+    return res.json({
+      success: false,
+      message: "email already exist please use a different email",
+    });
+  }
   EmployeeModel.create(req.body)
     .then((employees) => res.json(employees))
     .catch((err) => res.json(err));
@@ -78,3 +91,4 @@ app.post("/register", (req, res) => {
 app.listen(3001, () => {
   console.log("server is ruuninng");
 });
+// end >>>>>>>>>>>>>>>>
