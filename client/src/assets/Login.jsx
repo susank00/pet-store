@@ -11,13 +11,13 @@ const Login = () => {
     e.preventDefault();
     axios
       .post("http://localhost:3001/login", { email, password })
-      .then((result) => {
-        console.log(result);
-        if (result.data === "success") {
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.success) {
           navigate("/profile", { state: { email } });
         } else {
           // Show an alert for unsuccessful login
-          alert(response.data.errors[0].message);
+          alert(response.data.message);
         }
       })
       .catch((err) => {
@@ -44,7 +44,7 @@ const Login = () => {
         </div>
         <div>
           <label>PASSWORD:</label>
-          <br />
+
           <input
             type="password"
             name="password"

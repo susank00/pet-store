@@ -30,17 +30,45 @@ app.post("/getUserInfo", (req, res) => {
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
-  EmployeeModel.findOne({ email: email }).then((user) => {
-    if (user) {
-      if (user.password === password) {
-        res.json("success");
+
+  if (!email && !password) {
+    return res.json({
+      success: false,
+      message: "Please enter email and password",
+    });
+  } else if (!email) {
+    return res.json({
+      success: false,
+      message: "Please enter email address",
+    });
+  } else if (!password) {
+    return res.json({
+      success: false,
+      message: "Please enter password",
+    });
+  }
+  EmployeeModel.findOne({ email: email })
+    .then((user) => {
+      if (user) {
+        if (user.password === password) {
+          res.json({
+            success: true,
+            message: "Login successful",
+            user: { name: user.name, email: user.email },
+          });
+        } else {
+          res.json({ success: false, message: "Incorrect password" });
+        }
       } else {
-        res.json("password incorrect");
+        res.json({ success: false, message: "User not found" });
       }
-    } else {
-      res.json("no record exists");
-    }
-  });
+    })
+    .catch((error) => {
+      console.error("Error during login:", error.message);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    });
 });
 app.post("/register", (req, res) => {
   EmployeeModel.create(req.body)
