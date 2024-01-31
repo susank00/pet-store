@@ -32,6 +32,16 @@ app.post("/getUserInfo", (req, res) => {
     });
 });
 // end
+app.get("/employeeNames", async (req, res) => {
+  try {
+    // Fetch all employee names from the database
+    const employeeNames = await EmployeeModel.find({}, "name");
+    const nameList = employeeNames.map((employee) => employee.name);
+    res.json(nameList);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 // for login panel validation login
 app.post("/login", (req, res) => {
@@ -131,39 +141,16 @@ app.post("/register", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-
-// for getting user list in admin
-// ... (existing imports)
-
-// Endpoint to get all users (secured for admin access)
-app.get("/getAllUsers", async (req, res) => {
-  // Check if the user making the request is an admin
-  const { email } = req.body;
-  const user = await EmployeeModel.findOne({ email });
-
-  if (user && user.role === "admin") {
-    try {
-      const allUsers = await EmployeeModel.find(
-        {},
-        { name: 1, email: 1, role: 1 }
-      );
-      res.json({ success: true, users: allUsers });
-    } catch (error) {
-      console.error("Error fetching all users:", error.message);
-      res
-        .status(500)
-        .json({ success: false, message: "Internal server error" });
-    }
-  } else {
-    res.status(403).json({
-      success: false,
-      message: "Access forbidden. Admin access required.",
-    });
+app.get("/names", async (req, res) => {
+  try {
+    // Fetch all names from the database
+    const name = await EmployeeModel.find({}, "name");
+    const nameList = name.map((user) => user.name);
+    res.json(nameList);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-// ... (existing code)
-
 // end>>>>>>>>>>
 app.listen(3001, () => {
   console.log("server is ruuninng");

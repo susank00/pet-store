@@ -1,0 +1,32 @@
+import { useEffect, useState } from "react";
+
+const UserList = () => {
+  const [employeeNames, setEmployeeNames] = useState([]);
+
+  useEffect(() => {
+    const fetchEmployeeNames = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/employeeNames");
+        const namesData = await response.json();
+        setEmployeeNames(namesData);
+      } catch (error) {
+        console.error("Error fetching employee names:", error);
+      }
+    };
+
+    fetchEmployeeNames();
+  }, []);
+
+  return (
+    <div>
+      <h1>List of Employee Names</h1>
+      <ul>
+        {employeeNames.map((employeeName, index) => (
+          <li key={index}>{employeeName}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default UserList;

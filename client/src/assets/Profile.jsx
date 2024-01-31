@@ -8,8 +8,18 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const userEmail = location.state && location.state.email;
-
+  const [employeeNames, setEmployeeNames] = useState([]);
   useEffect(() => {
+    const fetchEmployeeNames = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/employeeNames");
+        const namesData = await response.json();
+        setEmployeeNames(namesData);
+      } catch (error) {
+        console.error("Error fetching employee names:", error);
+      }
+    };
+
     const fetchUserInfo = async () => {
       try {
         const response = await axios.post("http://localhost:3001/getUserInfo", {
@@ -31,20 +41,27 @@ const Profile = () => {
     if (userEmail) {
       fetchUserInfo();
     }
+
+    fetchEmployeeNames(); // Move this line outside of fetchUserInfo if you want it to run unconditionally
   }, [userEmail]);
 
   return (
-    <div>
+    <>
       {name || password ? (
-        <p>
+        <div>
           Welcome,
           {name}
-          (Role: {role})
-        </p>
+          (Role: {role})<h1>List of Employee Names</h1>
+          <ul>
+            {employeeNames.map((employeeName, index) => (
+              <li key={index}>{employeeName}</li>
+            ))}
+          </ul>
+        </div>
       ) : (
         <p>Loading user information...</p>
       )}
-    </div>
+    </>
   );
 };
 
