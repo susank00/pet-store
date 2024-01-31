@@ -1,0 +1,69 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+const Profile = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    // Fetch the list of users from your backend API
+    axios
+      .get("mongodb://127.0.0.1:27017/employee") // Replace with your actual backend route
+      .then((response) => {
+        setUsers(response.data.users);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error.message);
+      });
+  }, []);
+
+  const handleDeleteUser = (userId) => {
+    // Make a delete request to delete the user by ID
+    axios
+      .delete(`http://localhost:3001/deleteUser/${userId}`)
+      .then((response) => {
+        if (response.data.success) {
+          // Update the users list after successful deletion
+          setUsers(users.filter((user) => user._id !== userId));
+        } else {
+          console.error("Error deleting user:", response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting user:", error.message);
+      });
+  };
+
+  return (
+    <div>
+      <h2>User List</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr key={user._id}>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>{user.role}</td>
+              <td>
+                {user.role === "admin" && (
+                  <button onClick={() => handleDeleteUser(user._id)}>
+                    Delete
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default Profile;

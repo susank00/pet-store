@@ -5,6 +5,8 @@ import { useLocation } from "react-router-dom";
 const Profile = () => {
   const location = useLocation();
   const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
   const userEmail = location.state && location.state.email;
 
   useEffect(() => {
@@ -16,6 +18,8 @@ const Profile = () => {
 
         if (response.data.success) {
           setName(response.data.name);
+          setPassword(response.data.password);
+          setRole(response.data.role);
         } else {
           console.error("User information not found:", response.data.message);
         }
@@ -31,7 +35,15 @@ const Profile = () => {
 
   return (
     <div>
-      {name ? <p>Welcome, {name}!</p> : <p>Loading user information...</p>}
+      {name || password ? (
+        <p>
+          Welcome,
+          {name}
+          (Role: {role})
+        </p>
+      ) : (
+        <p>Loading user information...</p>
+      )}
     </div>
   );
 };
