@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import MyNavbar from "../components/MyNavbar";
+import Adminfunction from "../adminfucntions/Adminfunction.js/Adminfunction";
 
 const Profile = () => {
   const location = useLocation();
@@ -8,7 +10,6 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const userEmail = location.state && location.state.email;
-  const [employeeNames, setEmployeeNames] = useState([]);
 
   const fetchUserInfo = async () => {
     try {
@@ -22,7 +23,7 @@ const Profile = () => {
         setRole(response.data.role);
       }
       if (response.data.role === "admin") {
-        fetchEmployeeNames();
+        <Adminfunction />;
       } else {
         console.error("User information not found:", response.data.message);
       }
@@ -37,25 +38,19 @@ const Profile = () => {
     }
   }, [userEmail]);
 
-  const fetchEmployeeNames = async () => {
-    try {
-      const response = await axios.get("http://localhost:3001/employeeNames");
-      setEmployeeNames(response.data);
-    } catch (error) {
-      console.error("Error fetching employee names:", error);
-    }
-  };
-
   return (
     <>
+      <MyNavbar />
       {name || password ? (
         <div>
-          Welcome, {name} (Role: {role})<h1>List of Employee Names</h1>
-          <ul>
-            {employeeNames.map((employeeName, index) => (
-              <li key={index}>{employeeName}</li>
-            ))}
-          </ul>
+          Welcome, {name} <br />
+          (Role: {role})
+          {role === "admin" && (
+            <>
+              <h1>List of Employee Names</h1>
+              <Adminfunction />
+            </>
+          )}
         </div>
       ) : (
         <p>Loading user information...</p>
