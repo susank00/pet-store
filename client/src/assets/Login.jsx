@@ -3,6 +3,7 @@ import "../styles/signup.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import MyNavbar from "../components/MyNavbar";
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -27,37 +28,44 @@ const Login = () => {
       });
   };
   return (
-    <div className="signup-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>User Login</h2>
-        <div>
-          <label>
-            EMAIL:
-            <br />
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter email"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>PASSWORD:</label>
+    <>
+      <MyNavbar />
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Login</button>
-        <br /> <br />
-        Not registered yet!! <br />
-        <Link to="/register">Register Now</Link>
-      </form>
-    </div>
+      <br />
+      <br />
+
+      <div className="signup-container">
+        <form className="login-form" onSubmit={handleSubmit}>
+          <h2>User Login</h2>
+          <div>
+            <label>
+              EMAIL:
+              <br />
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </label>
+          </div>
+          <div>
+            <label>PASSWORD:</label>
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <button type="submit">Login</button>
+          <br /> <br />
+          Not registered yet!! <br />
+          <Link to="/register">Register Now</Link>
+        </form>
+      </div>
+    </>
   );
 };
 export default Login;

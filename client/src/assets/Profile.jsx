@@ -47,7 +47,6 @@ const Profile = () => {
           (Role: {role})
           {role === "admin" && (
             <>
-              <h1>List of Employee Names</h1>
               <Adminfunction />
             </>
           )}

@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const cors = require("cors");
 const EmployeeModel = require("./models/Employee");
 
@@ -151,6 +152,36 @@ app.get("/names", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// delete user
+app.delete("/api/employees/delete/:name", async (req, res) => {
+  const nameToDelete = req.params.name;
+
+  try {
+    // Find and delete the user by name
+    const deletedUser = await EmployeeModel.findOneAndDelete({
+      name: nameToDelete,
+    });
+
+    if (deletedUser !== null) {
+      res.json({
+        success: true,
+        message: "User deleted successfully",
+        deletedUser,
+      });
+    } else {
+      res.status(404).json({ success: false, message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+});
+
+// end of deleteuser func
 // end>>>>>>>>>>
 app.listen(3001, () => {
   console.log("server is ruuninng");
