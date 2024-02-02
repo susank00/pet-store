@@ -3,11 +3,17 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const EmployeeModel = require("./models/Employee");
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 mongoose.connect("mongodb://127.0.0.1:27017/employee");
+const generateRandomKey = () => {
+  return crypto.randomBytes(32).toString("hex");
+};
+const secretKey = generateRandomKey();
 
 // this for fetching employee namewe
 app.post("/getUserInfo", (req, res) => {
@@ -45,6 +51,61 @@ app.get("/employeeNames", async (req, res) => {
 });
 
 // for login panel validation login
+
+app.get("/profile", (req, res) => {
+  // Extract the authorization header from the request
+  const authHeader = req.headers["authorization"];
+
+  // Check if the authorization header is present
+  if (!authHeader) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized: Missing authorization header",
+    });
+  }
+
+  // Extract the token from the authorization header
+  const token = authHeader.split(" ")[1];
+
+  // Verify the token
+  jwt.verify(token, secretKey, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Invalid or expired token",
+      });
+    }
+
+    // If the token is valid, you can use the decoded information to fetch the user's profile
+    const userId = decoded.userId; // Assuming userId is included in the token
+
+    // Fetch user profile from your database
+    EmployeeModel.findById(userId)
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({
+            success: false,
+            message: "User not found",
+          });
+        }
+
+        // Return the user profile data
+        res.json({
+          success: true,
+          message: "Profile fetched successfully",
+          user: { name: user.name, email: user.email },
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching user profile:", error.message);
+        res.status(500).json({
+          success: false,
+          message: "Internal server error",
+        });
+      });
+  });
+});
+
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -68,10 +129,16 @@ app.post("/login", (req, res) => {
     .then((user) => {
       if (user) {
         if (user.password === password) {
+          const accessToken = jwt.sign(
+            { userId: user._id, email: user.email },
+            secretKey,
+            { expiresIn: "1h" }
+          );
           res.json({
             success: true,
             message: "Login successful",
             user: { name: user.name, email: user.email },
+            accessToken: accessToken,
           });
         } else {
           res.json({ success: false, message: "Incorrect password" });

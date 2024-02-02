@@ -1,32 +1,48 @@
-import { useEffect, useState } from "react";
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
 
-const UserList = () => {
-  const [employeeNames, setEmployeeNames] = useState([]);
-
-  useEffect(() => {
-    const fetchEmployeeNames = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/employeeNames");
-        const namesData = await response.json();
-        setEmployeeNames(namesData);
-      } catch (error) {
-        console.error("Error fetching employee names:", error);
+  if (!email && !password) {
+    return res.json({
+      success: false,
+      message: "Please enter email and password",
+    });
+  } else if (!email) {
+    return res.json({
+      success: false,
+      message: "Please enter email address",
+    });
+  } else if (!password) {
+    return res.json({
+      success: false,
+      message: "Please enter password",
+    });
+  }
+  EmployeeModel.findOne({ email: email })
+    .then((user) => {
+      if (user) {
+        if (user.password === password) {
+          const accessToken = jwt.sign(
+            { userId: user._id, email: user.email },
+            secretKey,
+            { expiresIn: "1h" }
+          );
+          res.json({
+            success: true,
+            message: "Login successful",
+            user: { name: user.name, email: user.email },
+            accessToken: accessToken,
+          });
+        } else {
+          res.json({ success: false, message: "Incorrect password" });
+        }
+      } else {
+        res.json({ success: false, message: "User not found" });
       }
-    };
-
-    fetchEmployeeNames();
-  }, []);
-
-  return (
-    <div>
-      <h1>List of Employee Names</h1>
-      <ul>
-        {employeeNames.map((employeeName, index) => (
-          <li key={index}>{employeeName}</li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-export default UserList;
+    })
+    .catch((error) => {
+      console.error("Error during login:", error.message);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    });
+});

@@ -11,6 +11,31 @@ const Profile = () => {
   const [role, setRole] = useState("");
   const userEmail = location.state && location.state.email;
 
+  useEffect(() => {
+    getProfile();
+    // Fetch user info only once when the component mounts
+    fetchUserInfo();
+  }, []);
+
+  const getProfile = async () => {
+    const getAccessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.post("http://localhost:3001/login", {
+        timeout: 10000,
+        headers: {
+          Authorization: `Bearer ${getAccessToken}`,
+        },
+      });
+      console.log(response);
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.errors[0].message);
+      } else {
+        alert("Unknown error, please try again");
+      }
+    }
+  };
+
   const fetchUserInfo = async () => {
     try {
       const response = await axios.post("http://localhost:3001/getUserInfo", {
@@ -21,22 +46,13 @@ const Profile = () => {
         setName(response.data.name);
         setPassword(response.data.password);
         setRole(response.data.role);
-      }
-      if (response.data.role === "admin") {
-        <Adminfunction />;
       } else {
-        console.error("User information not found:", response.data.message);
+        console.error(response.data.message);
       }
     } catch (error) {
       console.error("Error fetching user information:", error.message);
     }
   };
-
-  useEffect(() => {
-    if (userEmail) {
-      fetchUserInfo();
-    }
-  }, [userEmail]);
 
   return (
     <>
@@ -47,6 +63,7 @@ const Profile = () => {
           (Role: {role})
           {role === "admin" && (
             <>
+              {/* Render Adminfunction only if the role is admin */}
               <Adminfunction />
             </>
           )}

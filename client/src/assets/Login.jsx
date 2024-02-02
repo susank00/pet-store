@@ -5,28 +5,47 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MyNavbar from "../components/MyNavbar";
 const Login = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+
+  const loginHandler = async (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:3001/login", { email, password })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.success) {
-          navigate("/profile", { state: { email } });
-        } else {
-          // Show an alert for unsuccessful login
-          alert(response.data.message);
+
+    const loginData = {
+      email: email,
+      password: password,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/login",
+        loginData,
+        {
+          timeout: 10000,
         }
-      })
-      .catch((err) => {
-        console.error(err);
-        // Show an alert for any other errors
-        alert("An error occurred. Please try again later.");
-      });
+      );
+
+      const getAccessToken = response.data.accessToken;
+      localStorage.setItem("accessToken", getAccessToken);
+
+      if (response.data.status === "success") {
+        alert("logged in success");
+      }
+
+      if (response.data.success) {
+        navigate("/profile", { state: { email } });
+      } else {
+        // Show an alert for unsuccessful login
+        alert(response.data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      // Show an alert for any other errors
+      alert("An error occurred. Please try again later.");
+    }
   };
+
   return (
     <>
       <MyNavbar />
@@ -35,7 +54,7 @@ const Login = () => {
       <br />
 
       <div className="signup-container">
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={loginHandler}>
           <h2>User Login</h2>
           <div>
             <label>
