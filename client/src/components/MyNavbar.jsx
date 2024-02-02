@@ -1,20 +1,66 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useLocation } from "react-router-dom";
 import "/index.css";
+import axios from "axios";
+const MyNavbar = () => {
+  const navigation = [
+    { name: "Dashboard", href: "/", current: true },
+    { name: "Profile", href: "/profile", current: false },
+    { name: "Projects", href: "#", current: false },
+    { name: "Logout", href: "#", current: false },
+  ];
+  const location = useLocation();
+  const [name, setName] = useState("");
 
-const navigation = [
-  { name: "Dashboard", href: "/", current: true },
-  { name: "Profile", href: "/profile", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Logout", href: "#", current: false },
-];
+  const userEmail = location.state && location.state.email;
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+  useEffect(() => {
+    getProfile();
+    // Fetch user info only once when the component mounts
+    fetchUserInfo();
+  }, []);
 
-export default function M() {
+  const getProfile = async () => {
+    const getAccessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.get("http://localhost:3001/profile", {
+        timeout: 10000,
+        headers: {
+          Authorization: `Bearer ${getAccessToken}`,
+        },
+      });
+      console.log(response);
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.errors[0].message);
+      } else {
+        alert("Unknown error, please try again");
+      }
+    }
+  };
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.post("http://localhost:3001/getUserInfo", {
+        email: userEmail,
+      });
+
+      if (response.data.success) {
+        setName(response.data.name);
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching user information:", error.message);
+    }
+  };
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(" ");
+  }
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -60,6 +106,10 @@ export default function M() {
                     ))}
                   </div>
                 </div>
+              </div>
+
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 text-white">
+                Welcome {name}
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
@@ -164,4 +214,5 @@ export default function M() {
       )}
     </Disclosure>
   );
-}
+};
+export default MyNavbar;

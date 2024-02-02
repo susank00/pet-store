@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import MyNavbar from "../components/MyNavbar";
-import Adminfunction from "../adminfucntions/Adminfunction.js/Adminfunction";
+
+import "flowbite";
 
 const Profile = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const Profile = () => {
   const getProfile = async () => {
     const getAccessToken = localStorage.getItem("accessToken");
     try {
-      const response = await axios.post("http://localhost:3001/login", {
+      const response = await axios.get("http://localhost:3001/profile", {
         timeout: 10000,
         headers: {
           Authorization: `Bearer ${getAccessToken}`,
@@ -57,14 +58,35 @@ const Profile = () => {
   return (
     <>
       <MyNavbar />
+
       {name || password ? (
         <div>
           Welcome, {name} <br />
-          (Role: {role})
+          (Role: {role})<br />
           {role === "admin" && (
             <>
-              {/* Render Adminfunction only if the role is admin */}
-              <Adminfunction />
+              {/* Render Adminfunction only if the role is admin */}{" "}
+              <div className="max-w-sm p-1 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <a href="/admin">
+                  <h5 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-black">
+                    ADMIN function
+                  </h5>
+                  <img
+                    src="./images/admin.png" // Replace with the actual path to your image
+                    alt="Admin Function Image"
+                    className="max-w-full h-auto"
+                  />
+                </a>
+                <p className="mb-4 font-normal text-gray-700 dark:text-black-800">
+                  List|Delete|modify
+                </p>
+                <a
+                  href="/admin"
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Go to Admin panel
+                </a>
+              </div>
             </>
           )}
         </div>

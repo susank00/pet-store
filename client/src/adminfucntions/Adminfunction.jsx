@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import MyNavbar from "../components/MyNavbar";
 
 const Adminfunction = () => {
   const [employeeNames, setEmployeeNames] = useState([]);
@@ -43,6 +44,7 @@ const Adminfunction = () => {
 
   return (
     <>
+      <MyNavbar />
       <div>
         <button onClick={handleClick}>
           Click me to fetch employee names{" "}
@@ -55,6 +57,9 @@ const Adminfunction = () => {
 
         <br />
       </div>
+      <br />
+      <br />
+      <br />
       <div>
         <h2>Delete User by Name</h2>
         <label htmlFor="userName">Enter User Name:</label>

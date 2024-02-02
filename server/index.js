@@ -52,6 +52,8 @@ app.get("/employeeNames", async (req, res) => {
 
 // for login panel validation login
 
+// Assuming you have the EmployeeModel and secretKey already defined
+
 app.get("/profile", (req, res) => {
   // Extract the authorization header from the request
   const authHeader = req.headers["authorization"];

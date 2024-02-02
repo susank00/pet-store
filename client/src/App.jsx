@@ -4,7 +4,7 @@ import Signup from "./assets/Signup";
 import Login from "./assets/Login";
 import Home from "./assets/Profile";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Adminfunction from "./adminfucntions/Adminfunction.js/Adminfunction";
+import Adminfunction from "./adminfucntions//Adminfunction";
 const App = () => {
   return (
     <>
