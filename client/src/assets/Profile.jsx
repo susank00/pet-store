@@ -90,7 +90,11 @@ const Profile = () => {
           )}
         </div>
       ) : (
-        <p>Loading user information...</p>
+        <div>
+          <p>Login to enter in to your profile </p>
+
+          <Loginhandler />
+        </div>
       )}
     </>
   );
