@@ -53,37 +53,49 @@ const Login = () => {
       <br />
       <br />
 
-      <div className="signup-container">
-        <form className="login-form" onSubmit={loginHandler}>
-          <h2>User Login</h2>
-          <div>
-            <label>
-              EMAIL:
-              <br />
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter email"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>PASSWORD:</label>
-
+      <form
+        className="max-w-sm mx-auto p-8 rounded border border-gray-300 bg-gray-100 dark:ring-gray-500"
+        onSubmit={loginHandler}
+      >
+        <h2 className="text-2xl font-bold mb-4">User Login</h2>
+        <div className="mb-4">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            EMAIL:
+            <br />
             <input
-              type="password"
-              name="password"
-              placeholder="Enter password"
-              onChange={(e) => setPassword(e.target.value)}
+              type="email"
+              name="email"
+              placeholder="Enter email"
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
             />
-          </div>
-          <button type="submit">Login</button>
-          <br /> <br />
-          Not registered yet!! <br />
-          <Link to="/register">Register Now</Link>
-        </form>
-      </div>
+          </label>
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            PASSWORD:
+          </label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        <button
+          type="submit"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Login
+        </button>
+        <div className="mt-4">
+          Not registered yet!!{" "}
+          <Link to="/register" className="text-blue-700 dark:text-blue-400">
+            Register Now
+          </Link>
+        </div>
+      </form>
     </>
   );
 };
