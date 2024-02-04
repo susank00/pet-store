@@ -54,12 +54,12 @@ const Login = () => {
       <br />
 
       <form
-        className="max-w-sm mx-auto p-8 rounded border border-gray-300 bg-gray-100 dark:ring-gray-500"
+        className="max-w-sm mx-auto p-8 rounded border border-gray-300 bg-red-300 dark:ring-gray-500"
         onSubmit={loginHandler}
       >
         <h2 className="text-2xl font-bold mb-4">User Login</h2>
         <div className="mb-4">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          <label className="block mb-2 text-sm  text-gray-900 dark:text-black font-bold ">
             EMAIL:
             <br />
             <input
@@ -72,7 +72,7 @@ const Login = () => {
           </label>
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          <label className="block mb-2 text-sm font-bold text-gray-900 dark:text-black">
             PASSWORD:
           </label>
           <input
@@ -91,7 +91,10 @@ const Login = () => {
         </button>
         <div className="mt-4">
           Not registered yet!!{" "}
-          <Link to="/register" className="text-blue-700 dark:text-blue-400">
+          <Link
+            to="/register"
+            className="text-blue-700 font-bold dark:text-blue-400"
+          >
             Register Now
           </Link>
         </div>
