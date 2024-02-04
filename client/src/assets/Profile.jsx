@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import MyNavbar from "../components/MyNavbar";
 import Loginhandler from "../functionalcomponent/Loginhandler";
 const Profile = () => {
@@ -9,8 +9,6 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const userEmail = location.state && location.state.email;
-  const [isloggedin, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
 
   const getProfile = async () => {
     const getAccessToken = localStorage.getItem("accessToken");
@@ -48,50 +46,22 @@ const Profile = () => {
       console.error("Error fetching user information:", error.message);
     }
   };
-  const checkUserStatus = async () => {
-    const getAccessToken = localStorage.getItem("accessToken");
-    if (getAccessToken) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  };
-  const onLogout = async () => {
-    localStorage.removeItem("accessToken");
-    setIsLoggedIn(false); //
-    navigate("/");
-  };
-  const onLogin = async () => {
-    navigate("/login");
-  };
+
   useEffect(() => {
     // Fetch user info only once when the component mounts
     fetchUserInfo();
     getProfile();
-    checkUserStatus();
   }, []);
 
   return (
     <>
       <MyNavbar />
-      <Loginhandler />
+
       {name || password ? (
         <div>
           Welcome, {name} <br />
           (Role: {role})<br />
-          <div>
-            {isloggedin ? (
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                onClick={onLogout}
-              >
-                Logout
-              </button>
-            ) : (
-              <button onClick={onLogin}>Login</button>
-            )}
-          </div>
+          <Loginhandler />
           {role === "admin" && (
             <>
               {/* Render Adminfunction only if the role is admin */}{" "}

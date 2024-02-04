@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "/index.css";
 import axios from "axios";
 const MyNavbar = () => {
@@ -9,17 +9,15 @@ const MyNavbar = () => {
     { name: "Dashboard", href: "/", current: true },
     { name: "Profile", href: "/profile", current: false },
     { name: "Projects", href: "#", current: false },
-    { name: "Logout", href: "#", current: false },
   ];
-  const location = useLocation();
-  const [name, setName] = useState("");
 
-  const userEmail = location.state && location.state.email;
+  const [isloggedin, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getProfile();
+    checkUserStatus();
     // Fetch user info only once when the component mounts
-    fetchUserInfo();
   }, []);
 
   const getProfile = async () => {
@@ -36,25 +34,25 @@ const MyNavbar = () => {
       if (error.response) {
         alert(error.response.data.errors[0].message);
       } else {
-        alert("Unknown error, please try again");
+        alert("unkknown error,please try again");
       }
     }
   };
-
-  const fetchUserInfo = async () => {
-    try {
-      const response = await axios.post("http://localhost:3001/getUserInfo", {
-        email: userEmail,
-      });
-
-      if (response.data.success) {
-        setName(response.data.name);
-      } else {
-        console.error(response.data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching user information:", error.message);
+  const checkUserStatus = async () => {
+    const getAccessToken = localStorage.getItem("accessToken");
+    if (getAccessToken) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
+  };
+  const onLogout = async () => {
+    localStorage.removeItem("accessToken");
+    setIsLoggedIn(false); //
+    navigate("/");
+  };
+  const onLogin = async () => {
+    navigate("/login");
   };
 
   function classNames(...classes) {
@@ -107,7 +105,17 @@ const MyNavbar = () => {
                   </div>
                 </div>
               </div>
-
+              <div>
+                {isloggedin ? (
+                  <button className="text-white" onClick={onLogout}>
+                    Logout
+                  </button>
+                ) : (
+                  <button className="text-white" onClick={onLogin}>
+                    Login
+                  </button>
+                )}
+              </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 text-white">
                 Welcome {name}
               </div>
