@@ -13,31 +13,41 @@ const MyNavbar = () => {
 
   const [isloggedin, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const [userName, setUserName] = useState(null);
+  const getAccessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    getProfile();
     checkUserStatus();
     // Fetch user info only once when the component mounts
   }, []);
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/profile", {
+          timeout: 10000,
+          headers: {
+            Authorization: `Bearer ${getAccessToken}`,
+          },
+        });
 
-  const getProfile = async () => {
-    const getAccessToken = localStorage.getItem("accessToken");
-    try {
-      const response = await axios.get("http://localhost:3001/profile", {
-        timeout: 10000,
-        headers: {
-          Authorization: `Bearer ${getAccessToken}`,
-        },
-      });
-      console.log(response);
-    } catch (error) {
-      if (error.response) {
-        alert(error.response.data.errors[0].message);
-      } else {
-        alert("unkknown error,please try again");
+        const { success, user } = response.data;
+
+        if (success) {
+          setUserName(user.name);
+        } else {
+          console.log("Error fetching user profile:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
       }
+    };
+
+    if (getAccessToken) {
+      getProfile();
     }
-  };
+  }, [getAccessToken]);
+
+  // end of the fucntion
   const checkUserStatus = async () => {
     const getAccessToken = localStorage.getItem("accessToken");
     if (getAccessToken) {
@@ -117,7 +127,7 @@ const MyNavbar = () => {
                 )}
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 text-white">
-                Welcome {name}
+                Welcome {userName}
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button

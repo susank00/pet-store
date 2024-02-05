@@ -4,13 +4,18 @@ import { useLocation } from "react-router-dom";
 import MyNavbar from "../components/MyNavbar";
 import Loginhandler from "../functionalcomponent/Loginhandler";
 import UserFunction from "../userfunctions/UserFunction";
+
 const Profile = () => {
   const location = useLocation();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const userEmail = location.state && location.state.email;
-
+  useEffect(() => {
+    // Fetch user info only once when the component mounts
+    fetchUserInfo();
+    getProfile();
+  }, []);
   const getProfile = async () => {
     const getAccessToken = localStorage.getItem("accessToken");
     try {
@@ -47,12 +52,6 @@ const Profile = () => {
       console.error("Error fetching user information:", error.message);
     }
   };
-
-  useEffect(() => {
-    // Fetch user info only once when the component mounts
-    fetchUserInfo();
-    getProfile();
-  }, []);
 
   return (
     <>
