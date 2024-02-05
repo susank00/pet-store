@@ -249,6 +249,44 @@ app.delete("/api/employees/delete/:name", async (req, res) => {
     });
   }
 });
+app.put("/employees/:employeeName", async (req, res) => {
+  const { employeeName } = req.params;
+  const { newName, newPassword } = req.body;
+
+  try {
+    // Check if either newName or newPassword is provided
+    if (!newName && !newPassword) {
+      return res
+        .status(400)
+        .json({ error: "Either newName or newPassword must be provided" });
+    }
+
+    // Check if the employee exists
+    const existingEmployee = await EmployeeModel.findOne({
+      name: employeeName,
+    });
+    if (!existingEmployee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    // Update the employee's name and/or password
+    if (newName) {
+      existingEmployee.name = newName;
+    }
+    if (newPassword) {
+      // Hash the new password before saving
+      existingEmployee.password = newPassword; // Replace with bcrypt hash
+    }
+
+    // Save the updated employee
+    await existingEmployee.save();
+
+    return res.status(200).json({ message: "Employee updated successfully" });
+  } catch (error) {
+    console.error("Error updating employee:", error.message);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 // end of deleteuser func
 // end>>>>>>>>>>

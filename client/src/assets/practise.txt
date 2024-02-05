@@ -1,48 +1,92 @@
-app.post("/login", (req, res) => {
-  const { email, password } = req.body;
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-  if (!email && !password) {
-    return res.json({
-      success: false,
-      message: "Please enter email and password",
-    });
-  } else if (!email) {
-    return res.json({
-      success: false,
-      message: "Please enter email address",
-    });
-  } else if (!password) {
-    return res.json({
-      success: false,
-      message: "Please enter password",
-    });
-  }
-  EmployeeModel.findOne({ email: email })
-    .then((user) => {
-      if (user) {
-        if (user.password === password) {
-          const accessToken = jwt.sign(
-            { userId: user._id, email: user.email },
-            secretKey,
-            { expiresIn: "1h" }
-          );
-          res.json({
-            success: true,
-            message: "Login successful",
-            user: { name: user.name, email: user.email },
-            accessToken: accessToken,
-          });
-        } else {
-          res.json({ success: false, message: "Incorrect password" });
-        }
+const UserFunction = () => {
+  const [employeeName, setEmployeeName] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
+  useEffect(() => {
+    // Retrieve employeeName from localStorage when the component mounts
+    const storedEmployeeName = localStorage.getItem("employeeName");
+    if (storedEmployeeName) {
+      setEmployeeName(storedEmployeeName);
+    }
+    getProfile();
+  }, []);
+
+  const getProfile = async () => {
+    const getAccessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.get("http://localhost:3001/profile", {
+        timeout: 10000,
+        headers: {
+          Authorization: `Bearer ${getAccessToken}`,
+        },
+      });
+      console.log(response);
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.errors[0].message);
       } else {
-        res.json({ success: false, message: "User not found" });
+        alert("Unknown error, please try again");
       }
-    })
-    .catch((error) => {
-      console.error("Error during login:", error.message);
-      res
-        .status(500)
-        .json({ success: false, message: "Internal server error" });
-    });
-});
+    }
+  };
+  const updateEmployee = async () => {
+    try {
+      const response = await axios.put(`/employees/${employeeName}`, {
+        newName,
+        newPassword,
+      });
+      console.log(response.data.message);
+
+      // Fetch the current username from localStorage
+      const currentUsername = localStorage.getItem("employeeName");
+
+      console.log("Current username:", currentUsername);
+    } catch (error) {
+      console.error(
+        "Error updating employee:",
+        error.response.data.error || error.message
+      );
+    }
+  };
+
+  return (
+    <div>
+      <h2>Update Employee Information</h2>
+
+      <label htmlFor="employeeName">Employee Name:</label>
+      <input
+        type="text"
+        id="employeeName"
+        placeholder="Enter employee name"
+        value={employeeName}
+        onChange={(e) => setEmployeeName(e.target.value)}
+      />
+
+      <label htmlFor="newName">New Name:</label>
+      <input
+        type="text"
+        id="newName"
+        placeholder="Enter new name"
+        value={newName}
+        onChange={(e) => setNewName(e.target.value)}
+      />
+
+      <label htmlFor="newPassword">New Password:</label>
+      <input
+        type="password"
+        id="newPassword"
+        placeholder="Enter new password"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+      />
+
+      <button onClick={updateEmployee}>Update Employee</button>
+    </div>
+  );
+};
+
+export default UserFunction;

@@ -5,6 +5,7 @@ import Login from "./assets/Login";
 import Home from "./assets/Profile";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Adminfunction from "./adminfucntions//Adminfunction";
+import UserFunction from "./userfunctions/UserFunction";
 const App = () => {
   return (
     <>
@@ -15,6 +16,7 @@ const App = () => {
           <Route path="/profile" element={<Home />} />
           <Route path="/register" element={<Signup />} />
           <Route path="/admin" element={<Adminfunction />} />
+          <Route path="/User" element={<UserFunction />} />
         </Routes>
       </BrowserRouter>
     </>

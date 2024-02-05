@@ -3,6 +3,7 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import MyNavbar from "../components/MyNavbar";
 import Loginhandler from "../functionalcomponent/Loginhandler";
+import UserFunction from "../userfunctions/UserFunction";
 const Profile = () => {
   const location = useLocation();
   const [name, setName] = useState("");
@@ -59,9 +60,13 @@ const Profile = () => {
 
       {name || password ? (
         <div>
-          Welcome, {name} <br />
-          (Role: {role})<br />
-          <Loginhandler />
+          <p className=" text-center text-4xl text-gray-900 dark:text-black  font-bold">
+            {" "}
+            Welcome, {name} <br />
+            Role: {role}
+          </p>{" "}
+          <br />
+          <UserFunction />
           {role === "admin" && (
             <>
               {/* Render Adminfunction only if the role is admin */}{" "}
@@ -90,9 +95,8 @@ const Profile = () => {
           )}
         </div>
       ) : (
-        <div>
+        <div className="text-center text-4xl font-black p-20">
           <p>Login to enter in to your profile </p>
-
           <Loginhandler />
         </div>
       )}
