@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import MyNavbar from "../components/MyNavbar";
 import Loginhandler from "../functionalcomponent/Loginhandler";
 import UserFunction from "../userfunctions/UserFunction";
@@ -66,6 +66,7 @@ const Profile = () => {
           </p>{" "}
           <br />
           <UserFunction />
+          <Link to="/buy">goto buy</Link>
           {role === "admin" && (
             <>
               {/* Render Adminfunction only if the role is admin */}{" "}

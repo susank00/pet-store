@@ -4,8 +4,11 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MyNavbar from "../components/MyNavbar";
+import { useDispatch } from "react-redux";
+import { setUserSession } from "../redux/actions";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -26,7 +29,8 @@ const Login = () => {
           timeout: 10000,
         }
       );
-
+      const userData = response.data.user;
+      dispatch(setUserSession(userData));
       const getAccessToken = response.data.accessToken;
       localStorage.setItem("accessToken", getAccessToken);
 
