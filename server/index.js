@@ -288,6 +288,35 @@ app.put("/employees/:employeeName", async (req, res) => {
   }
 });
 
+// for product add
+// Assuming you have already defined the Product model
+const Product = require("./models/productModel");
+
+// Add endpoint for adding products
+app.post("/api/products", async (req, res) => {
+  const { name, description, price } = req.body;
+  try {
+    const newProduct = await Product.create({ name, description, price });
+    res.status(201).json({ success: true, product: newProduct });
+  } catch (error) {
+    console.error("Error adding product:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+// Add endpoint for fetching products
+app.get("/api/products", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching products:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+//end
+
 // end of deleteuser func
 // end>>>>>>>>>>
 app.listen(3001, () => {
