@@ -44,7 +44,8 @@ const Adminfunction = () => {
 
   return (
     <>
-      <MyNavbar />
+      {/* <MyNavbar /> */}
+
       <div>
         <button onClick={handleClick}>
           Click me to fetch employee names{" "}

@@ -38,7 +38,7 @@ const Signup = () => {
 
   return (
     <>
-      <MyNavbar />
+      {/* <MyNavbar /> */}
       <br /> <br /> <br />
       <form
         className="max-w-sm mx-auto p-8 rounded border border-gray-300 bg-red-300 dark:ring-gray-500"

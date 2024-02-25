@@ -53,7 +53,7 @@ const Login = () => {
 
   return (
     <>
-      <MyNavbar />
+      {/* <MyNavbar /> */}
 
       <br />
       <br />

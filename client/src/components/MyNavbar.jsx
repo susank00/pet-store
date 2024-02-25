@@ -8,7 +8,7 @@ const MyNavbar = () => {
   const navigation = [
     { name: "Dashboard", href: "/", current: true },
     { name: "Profile", href: "/profile", current: false },
-    { name: "Projects", href: "#", current: false },
+    { name: "Products", href: "/products", current: false },
   ];
 
   const [isloggedin, setIsLoggedIn] = useState(false);
@@ -178,7 +178,7 @@ const MyNavbar = () => {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            href="/User"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
