@@ -14,8 +14,9 @@ const Profile = () => {
   const userEmail = location.state && location.state.email;
   useEffect(() => {
     // Fetch user info only once when the component mounts
-    fetchUserInfo();
+
     getProfile();
+    fetchUserInfo();
   }, []);
   const getProfile = async () => {
     const getAccessToken = localStorage.getItem("accessToken");
@@ -55,31 +56,42 @@ const Profile = () => {
   };
 
   return (
-    <>
-      {/* <MyNavbar /> */}
-
+    <div className="bg-gray-500">
       {name || password ? (
         <div className="container mx-auto">
           <p className=" text-center text-4xl text-gray-900 dark:text-black  font-bold">
             {" "}
             Welcome, {name} <br />
             Role: {role}
-          </p>{" "}
+          </p>
           <br />
           <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
             {role === "admin" && (
               <>
                 {/* Render Adminfunction only if the role is admin */}{" "}
-                <div className="  max-w-sm p-1  border border-gray-200 rounded-lg shadow dark:bg-blue-500 dark:border-gray-700">
+                <div
+                  className=" bg-gray-600 shadow-md rounded p-4 flex flex-col justify-between"
+                  style={{ height: "350px" }}
+                >
                   <a href="/admin">
                     <h5 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-black">
                       ADMIN function
                     </h5>
-                    <img
-                      src="./images/admin.png" // Replace with the actual path to your image
-                      alt="Admin Function Image"
-                      className="max-w-full h-auto"
-                    />
+                    <div
+                      style={{
+                        width: "80%",
+                        height: "200px",
+                        overflow: "hidden",
+                        padding: "20px",
+                        marginLeft: "30px",
+                      }}
+                    >
+                      <img
+                        src="./images/admin.png" // Replace with the actual path to your image
+                        alt="Admin Function Image"
+                        className="max-w-full h-auto"
+                      />
+                    </div>
                   </a>
                   <p className="mb-4 font-normal text-gray-700 dark:text-black-800">
                     List|Delete|modify
@@ -91,16 +103,26 @@ const Profile = () => {
                     Go to Admin panel
                   </a>
                 </div>
-                <div className=" bg-blue-600 max-w-sm p-2 border border-gray-600 rounded-lg shadow dark:dark:border-gray-600">
+                <div
+                  className=" bg-gray-600 shadow-md rounded p-4 flex flex-col justify-between"
+                  style={{ height: "350px" }}
+                >
                   <a href="/admin">
                     <h5 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-black">
                       Product Management
                     </h5>
-                    <div className="aspect-w-16 aspect-h-9">
+                    <div
+                      style={{
+                        width: "50%",
+                        height: "200px",
+                        overflow: "hidden",
+                        marginLeft: "80px",
+                      }}
+                    >
                       <img
+                        className=""
                         src="./images/productmgm.png" // Replace with the actual path to your image
                         alt="Admin Function Image"
-                        className="max-w-full h-auto"
                       />
                     </div>
                   </a>
@@ -115,25 +137,72 @@ const Profile = () => {
                     Go to Product mangement panel
                   </a>
                 </div>
-                <div className="max-w-sm p-1 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div
+                  className="bg-gray-600 shadow-md rounded p-4 flex flex-col justify-between"
+                  style={{ height: "350px" }}
+                >
                   <a href="/admin">
                     <h5 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-black">
                       Analytics
                     </h5>
-                    <img
-                      src="./images/analytics.png"
-                      alt="Admin Function Image"
-                      className="max-w-full h-25"
-                    />
+                    <div
+                      style={{
+                        width: "50%",
+                        height: "200px",
+                        overflow: "hidden",
+                        marginLeft: "80px",
+                      }}
+                    >
+                      <img
+                        className=""
+                        src="./images/analytics.png" // Replace with the actual path to your image
+                        alt="Admin Function Image"
+                      />
+                    </div>
                   </a>
-                  <p className="mb-4 font-normal text-gray-700 dark:text-black-800">
-                    Observe|Analyze|
+
+                  <p className="mb-4 font-normal text-gray-700 dark:text-black-800 ml-16">
+                    ADD|Delete|modify
                   </p>
                   <a
                     href="/addproduct"
-                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-auto"
                   >
-                    Analytics Protocols
+                    Goto Analtics panel
+                  </a>
+                </div>
+                <div
+                  className="bg-gray-600 shadow-md rounded p-4 flex flex-col justify-between"
+                  style={{ height: "350px" }}
+                >
+                  <a href="/admin">
+                    <h5 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-black">
+                      Analytics
+                    </h5>
+                    <div
+                      style={{
+                        width: "50%",
+                        height: "200px",
+                        overflow: "hidden",
+                        marginLeft: "80px",
+                      }}
+                    >
+                      <img
+                        className=""
+                        src="./images/analytics.png" // Replace with the actual path to your image
+                        alt="Admin Function Image"
+                      />
+                    </div>
+                  </a>
+
+                  <p className="mb-4 font-normal text-gray-700 dark:text-black-800 ml-16">
+                    ADD|Delete|modify
+                  </p>
+                  <a
+                    href="/addproduct"
+                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-auto"
+                  >
+                    Goto Analtics panel
                   </a>
                 </div>
               </>
@@ -146,7 +215,7 @@ const Profile = () => {
           <Loginhandler />
         </div>
       )}
-    </>
+    </div>
   );
 };
 

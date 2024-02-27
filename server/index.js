@@ -9,14 +9,16 @@ const crypto = require("crypto");
 const app = express();
 app.use(express.json());
 app.use(cors());
-mongoose.connect("mongodb://127.0.0.1:27017/employee");
+mongoose.connect(
+  "mongodb+srv://susankhatri00:aJVDLJMCi19mtNsQ@mern-login-db.zd7m4v9.mongodb.net/employee"
+);
 const generateRandomKey = () => {
   return crypto.randomBytes(32).toString("hex");
 };
 const secretKey = generateRandomKey();
 
 // this for fetching employee namewe
-app.post("/getUserInfo", (req, res) => {
+app.post("/getUserInfo", verifyAccessToken, (req, res) => {
   const { email } = req.body;
   EmployeeModel.findOne({ email: email })
     .then((user) => {
@@ -38,6 +40,27 @@ app.post("/getUserInfo", (req, res) => {
         .json({ success: false, message: "Internal server error" });
     });
 });
+
+function verifyAccessToken(req, res, next) {
+  const accessToken = req.headers.authorization;
+  if (!accessToken) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Access token not provided" });
+  }
+
+  jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Invalid access token" });
+    }
+    // Perform additional checks if needed (e.g., check if the user exists, is active, etc.)
+    req.user = decoded;
+    next();
+  });
+}
+
 // end
 app.get("/employeeNames", async (req, res) => {
   try {
