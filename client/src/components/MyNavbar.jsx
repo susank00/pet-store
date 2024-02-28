@@ -6,7 +6,7 @@ import "/index.css";
 import axios from "axios";
 const MyNavbar = () => {
   const navigation = [
-    { name: "Home", href: "/", current: true },
+    { name: "Dashboard", href: "/", current: true },
     { name: "Profile", href: "/profile", current: false },
     { name: "Products", href: "/products", current: false },
   ];
@@ -70,12 +70,12 @@ const MyNavbar = () => {
   }
 
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-gray-800 ">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-10xl px- sm:px-6 lg:px-8">
-            <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <div className=" mx-auto max-w-10xl px- sm:px-6 lg:px-8 ">
+            <div className="relative flex h-16 items-center justify-between z-10 ">
+              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden ">
                 {/* Mobile menu button*/}
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="absolute -inset-0.5" />

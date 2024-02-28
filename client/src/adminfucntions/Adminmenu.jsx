@@ -43,11 +43,11 @@ const Adminmenu = () => {
   return (
     <>
       <SideNavbar />
-      <div className="bg-gray-500">
+      <div className="bg-gray-500 ml-64 ">
         {loading ? ( // Show loading indicator if loading is true
           <div className="text-center text-4xl font-black p-20">Loading...</div>
         ) : name ? (
-          <div className="container mx-auto">
+          <div className="container m-0 p-0">
             <p className=" text-center text-4xl text-gray-900 dark:text-black  font-bold">
               {" "}
               Welcome, {name} <br />
