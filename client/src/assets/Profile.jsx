@@ -9,6 +9,7 @@ import AddProductForm from "../pages/AddProductForm";
 const Profile = () => {
   const location = useLocation();
   const [name, setName] = useState("");
+
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const userEmail = location.state && location.state.email;
@@ -16,7 +17,6 @@ const Profile = () => {
     // Fetch user info only once when the component mounts
 
     getProfile();
-    fetchUserInfo();
   }, []);
   const getProfile = async () => {
     const getAccessToken = localStorage.getItem("accessToken");
@@ -27,6 +27,8 @@ const Profile = () => {
           Authorization: `Bearer ${getAccessToken}`,
         },
       });
+      setName(response.data.user.name);
+      setRole(response.data.user.role);
       console.log(response);
     } catch (error) {
       if (error.response) {
@@ -37,23 +39,26 @@ const Profile = () => {
     }
   };
 
-  const fetchUserInfo = async () => {
-    try {
-      const response = await axios.post("http://localhost:3001/getUserInfo", {
-        email: userEmail,
-      });
+  // const fetchUserInfo = async () => {
+  //   try {
+  //     const response = await axios.post("http://localhost:3001/getUserInfo", {
+  //       email: userEmail,
+  //     });
 
-      if (response.data.success) {
-        setName(response.data.name);
-        setPassword(response.data.password);
-        setRole(response.data.role);
-      } else {
-        console.error(response.data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching user information:", error.message);
-    }
-  };
+  //     if (response.data.success) {
+  //       setName(response.data.name);
+  //       setPassword(response.data.password);
+  //       setRole(response.data.role);
+  //     } else {
+  //       console.error(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching user information:", error.message);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchUserInfo();
+  // }, []);
 
   return (
     <div className="bg-gray-500">
