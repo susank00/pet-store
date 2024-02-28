@@ -18,7 +18,7 @@ const generateRandomKey = () => {
 const secretKey = generateRandomKey();
 
 // this for fetching employee namewe
-app.post("/getUserInfo", verifyAccessToken, (req, res) => {
+app.post("/getUserInfo", (req, res) => {
   const { email } = req.body;
   EmployeeModel.findOne({ email: email })
     .then((user) => {
@@ -40,27 +40,6 @@ app.post("/getUserInfo", verifyAccessToken, (req, res) => {
         .json({ success: false, message: "Internal server error" });
     });
 });
-
-function verifyAccessToken(req, res, next) {
-  const accessToken = req.headers.authorization;
-  if (!accessToken) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Access token not provided" });
-  }
-
-  jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      return res
-        .status(403)
-        .json({ success: false, message: "Invalid access token" });
-    }
-    // Perform additional checks if needed (e.g., check if the user exists, is active, etc.)
-    req.user = decoded;
-    next();
-  });
-}
-
 // end
 app.get("/employeeNames", async (req, res) => {
   try {
@@ -311,8 +290,6 @@ app.put("/employees/:employeeName", async (req, res) => {
   }
 });
 
-// for product add
-// Assuming you have already defined the Product model
 const Product = require("./models/productModel");
 
 // Add endpoint for adding products
@@ -337,8 +314,6 @@ app.get("/api/products", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-
-//end
 
 // end of deleteuser func
 // end>>>>>>>>>>
