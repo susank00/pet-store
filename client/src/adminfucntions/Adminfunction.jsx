@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import MyNavbar from "../components/MyNavbar";
 
 const Adminfunction = () => {
   const [employeeNames, setEmployeeNames] = useState([]);
