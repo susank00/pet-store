@@ -83,6 +83,7 @@ app.get("/profile", (req, res) => {
     // If the token is valid, you can use the decoded information to fetch the user's profile
     const userId = decoded.userId; // Assuming userId is included in the token
     const username = decoded.name;
+    const role = decoded.role;
     // Fetch user profile from your database
     EmployeeModel.findById(userId)
       .then((user) => {
@@ -97,7 +98,7 @@ app.get("/profile", (req, res) => {
         res.json({
           success: true,
           message: "Profile fetched successfully",
-          user: { name: user.name, email: user.email },
+          user: { name: user.name, email: user.email, role: user.role },
         });
       })
       .catch((error) => {
