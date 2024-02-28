@@ -6,7 +6,7 @@ import "/index.css";
 import axios from "axios";
 const MyNavbar = () => {
   const navigation = [
-    { name: "Dashboard", href: "/", current: true },
+    { name: "Home", href: "/", current: true },
     { name: "Profile", href: "/profile", current: false },
     { name: "Products", href: "/products", current: false },
   ];
