@@ -48,11 +48,11 @@ const Adminmenu = () => {
           <div className="text-center text-4xl font-black p-20">Loading...</div>
         ) : name ? (
           <div className="container m-0 p-0">
-            <p className=" text-center text-4xl text-gray-900 dark:text-black  font-bold">
-              {" "}
+            <p className=" text-center text-4xl text-gray-900 dark:text-black font-bold  ">
               Welcome, {name} <br />
               Role: {role}
             </p>
+
             <br />
             <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
               {role === "admin" && (
