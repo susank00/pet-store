@@ -13,6 +13,7 @@ import MyNavbar from "./components/MyNavbar";
 import SideNavbar from "./components/SideNavbar";
 import Adminmenu from "./adminfucntions/Adminmenu";
 import Profile from "./assets/Profile";
+import Adminproductlist from "./adminfucntions/Adminproductlist";
 const App = () => {
   return (
     <>
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/sidenav" element={<SideNavbar />} />
           <Route path="/adminmenu" element={<Adminmenu />} />
           <Route path="/homepage" element={<Home />} />
+          <Route path="/adminproductlist" element={<Adminproductlist />} />
         </Routes>
       </BrowserRouter>
     </>

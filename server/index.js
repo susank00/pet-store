@@ -11,6 +11,7 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.static("public"));
 mongoose.connect(
   "mongodb+srv://susankhatri00:aJVDLJMCi19mtNsQ@mern-login-db.zd7m4v9.mongodb.net/employee"
 );
@@ -308,28 +309,16 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
 });
-// Add endpoint for adding products
-// app.post("/api/products", upload.single("file"), async (req, res) => {
-//   product.create(image:req.file.filename)
-//   .then(result)
-//   const { name, description, price } = req.body;
-//   try {
-//     const newProduct = await Product.create({ name, description, price });
-//     res.status(201).json({ success: true, product: newProduct });
-//   } catch (error) {
-//     console.error("Error adding product:", error.message);
-//     res.status(500).json({ success: false, message: "Internal server error" });
-//   }
-// });
 
 app.post("/api/products", upload.single("file"), async (req, res) => {
-  const { name, description, price, image } = req.body;
+  const { name, description, price, image, category } = req.body;
   try {
     const newProduct = await Product.create({
       name,
       description,
       price,
       image: req.file.filename,
+      category,
     });
     console.log(res);
     res.status(201).json({ success: true, product: newProduct });
