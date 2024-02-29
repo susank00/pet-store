@@ -5,6 +5,8 @@ const cors = require("cors");
 const EmployeeModel = require("./models/Employee");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const multer = require("multer");
+const path = require("path");
 
 const app = express();
 app.use(express.json());
@@ -292,12 +294,44 @@ app.put("/employees/:employeeName", async (req, res) => {
 });
 
 const Product = require("./models/productModel");
-
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+const upload = multer({
+  storage: storage,
+});
 // Add endpoint for adding products
-app.post("/api/products", async (req, res) => {
-  const { name, description, price } = req.body;
+// app.post("/api/products", upload.single("file"), async (req, res) => {
+//   product.create(image:req.file.filename)
+//   .then(result)
+//   const { name, description, price } = req.body;
+//   try {
+//     const newProduct = await Product.create({ name, description, price });
+//     res.status(201).json({ success: true, product: newProduct });
+//   } catch (error) {
+//     console.error("Error adding product:", error.message);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// });
+
+app.post("/api/products", upload.single("file"), async (req, res) => {
+  const { name, description, price, image } = req.body;
   try {
-    const newProduct = await Product.create({ name, description, price });
+    const newProduct = await Product.create({
+      name,
+      description,
+      price,
+      image: req.file.filename,
+    });
+    console.log(res);
     res.status(201).json({ success: true, product: newProduct });
   } catch (error) {
     console.error("Error adding product:", error.message);
@@ -306,6 +340,7 @@ app.post("/api/products", async (req, res) => {
 });
 
 // Add endpoint for fetching products
+
 app.get("/api/products", async (req, res) => {
   try {
     const products = await Product.find();
