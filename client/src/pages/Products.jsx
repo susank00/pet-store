@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const Products = () => {
@@ -27,7 +27,17 @@ const Products = () => {
             className="bg-gray-600 shadow-md rounded p-4 flex flex-col justify-between"
           >
             <div>
-              <div>{product.photo}</div>
+              <div>
+                <img
+                  style={{
+                    height: "150px",
+                    width: "100%",
+                    objectFit: "fill",
+                  }}
+                  src={`http://localhost:3001/images/${product.image}`}
+                  alt=""
+                />
+              </div>
               <h3 className="text-lg font-semibold mb-2 text-gray-200">
                 {product.name}
               </h3>

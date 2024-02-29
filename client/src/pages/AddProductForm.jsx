@@ -8,6 +8,7 @@ const AddProductForm = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [file, setFile] = useState("");
+
   // const handleUpload = (e) => {
   //   console.log(file);
   // };
@@ -25,6 +26,7 @@ const AddProductForm = () => {
       .post("http://localhost:3001/api/products", formData)
       .then((res) => {
         console.log("Product added:", res.data.product);
+        // console.log(setImage(res.data[0].image));
         // Clear form fields after successful submission
         setName("");
         setDescription("");
@@ -98,6 +100,7 @@ const AddProductForm = () => {
         type="file"
         placeholder="Files"
         onChange={(e) => setFile(e.target.files[0])}
+        accept=".jpeg, .png ,jpg "
       />
       <button
         onClick={handleSubmit}
