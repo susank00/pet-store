@@ -11,7 +11,12 @@ const AddProductForm = () => {
   const [category, setCategory] = useState("");
   const [showForm, setShowForm] = useState(true);
   const handleClose = () => {
-    setShowForm(false); // Update state to hide the form
+    setName("");
+    setCategory("");
+    setPrice("");
+    setDescription("");
+    setFile(null);
+    setShowForm(false);
   };
 
   const handleSubmit = (e) => {
@@ -46,7 +51,11 @@ const AddProductForm = () => {
           onSubmit={handleSubmit}
         >
           <button
-            onClick={handleClose}
+            onClick={(e) => {
+              e.preventDefault();
+              handleClose();
+              window.location.reload();
+            }}
             className="absolute top-1 right-1 text-white bg-red-600 p-1 rounded-full"
           >
             X
