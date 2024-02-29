@@ -45,7 +45,9 @@ const Adminmenu = () => {
       <SideNavbar />
       <div className="bg-gray-500 p-4 sm:ml-64 ">
         {loading ? ( // Show loading indicator if loading is true
-          <div className="text-center text-4xl font-black p-20">Loading...</div>
+          <div className="text-center text-4xl font-black p-4 h-screen sm:ml-64">
+            <img src="./images/loading.gif" alt="loading" />
+          </div>
         ) : name ? (
           <div className="container m-0 p-0">
             <p className=" text-center text-4xl text-gray-900 dark:text-black font-bold  ">
