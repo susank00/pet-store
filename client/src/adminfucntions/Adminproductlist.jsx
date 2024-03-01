@@ -46,7 +46,10 @@ const Adminproductlist = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Product name
+                Product Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Product id
               </th>
               <th scope="col" className="px-6 py-3">
                 Category
@@ -74,6 +77,8 @@ const Adminproductlist = () => {
                 >
                   {product.name}
                 </th>
+                <td className="px-6 py-4">{product._id}</td>
+
                 <td className="px-6 py-4">{product.category}</td>
                 <td className="px-6 py-4">{product.description}</td>
                 <td className="px-6 py-4">${product.price}</td>

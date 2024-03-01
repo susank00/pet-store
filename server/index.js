@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const multer = require("multer");
 const path = require("path");
+const router = express.Router();
 
 const app = express();
 app.use(express.json());
@@ -337,6 +338,30 @@ app.get("/api/products", async (req, res) => {
   } catch (error) {
     console.error("Error fetching products:", error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+app.put("/api/products/:productId", async (req, res) => {
+  const productId = req.params.productId;
+  const updatedProductData = req.body;
+
+  try {
+    // Find the product by ID and update it with the new data
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      updatedProductData,
+      { new: true }
+    );
+
+    // If the product doesn't exist, return a 404 status
+    if (!updatedProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Respond with the updated product data
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
