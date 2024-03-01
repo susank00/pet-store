@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
-import userReducer from "./reducers"; // Import your user reducer here
+import reducer from "./reducers"; // Import your user reducer here
 
 // Combine reducers if you have multiple reducers
 const rootReducer = combineReducers({
-  userReducer, // Add more reducers here if needed
+  reducer, // Add more reducers here if needed
 });
 
 // Create the Redux store with the combined reducers

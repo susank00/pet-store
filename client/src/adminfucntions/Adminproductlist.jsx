@@ -2,13 +2,27 @@ import { useEffect, useState } from "react";
 import SideNavbar from "../components/SideNavbar";
 import axios from "axios";
 import AddProductForm from "../pages/AddProductForm";
+import { useDispatch } from "react-redux";
+import { setSelectedProductId } from "../redux/actions";
+import { useNavigate } from "react-router-dom";
 
 const Adminproductlist = () => {
+  const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [showAddProductForm, setShowAddProductForm] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddProductClick = () => {
     setShowAddProductForm(true);
+  };
+  const handleEditClick = (productId) => {
+    console.log("Product ID:", productId);
+    dispatch(setSelectedProductId(productId));
+    navigate("/adminproductupdate");
+    console.log(
+      "Dispatched action:",
+      dispatch(setSelectedProductId(productId))
+    );
   };
 
   useEffect(() => {
@@ -83,12 +97,12 @@ const Adminproductlist = () => {
                 <td className="px-6 py-4">{product.description}</td>
                 <td className="px-6 py-4">${product.price}</td>
                 <td className="px-6 py-4 ">
-                  <a
-                    href="#"
+                  <button
+                    onClick={() => handleEditClick(product._id)}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     Edit
-                  </a>
+                  </button>
                 </td>
               </tr>
             ))}

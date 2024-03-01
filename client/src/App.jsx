@@ -14,6 +14,7 @@ import SideNavbar from "./components/SideNavbar";
 import Adminmenu from "./adminfucntions/Adminmenu";
 import Profile from "./assets/Profile";
 import Adminproductlist from "./adminfucntions/Adminproductlist";
+import Adminproductupdate from "./adminfucntions/Adminproductupdate";
 const App = () => {
   return (
     <>
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/adminmenu" element={<Adminmenu />} />
           <Route path="/homepage" element={<Home />} />
           <Route path="/adminproductlist" element={<Adminproductlist />} />
+          <Route path="/adminproductupdate" element={<Adminproductupdate />} />
         </Routes>
       </BrowserRouter>
     </>

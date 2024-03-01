@@ -1,17 +1,25 @@
+// reducer.js
+import { SET_SELECTED_PRODUCT_ID } from "./actions";
+
 const initialState = {
-  userSession: null,
+  selectedProductId: null,
 };
 
-const userReducer = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "SET_USER_SESSION":
+    case SET_SELECTED_PRODUCT_ID:
+      console.log(
+        "SET_SELECTED_PRODUCT_ID action dispatched. Payload:",
+        action.payload
+      );
       return {
         ...state,
-        userSession: action.payload,
+        selectedProductId: action.payload,
       };
     default:
+      console.log("Unrecognized action type:", action.type);
       return state;
   }
 };
 
-export default userReducer;
+export default reducer;
