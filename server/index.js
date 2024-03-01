@@ -340,31 +340,45 @@ app.get("/api/products", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-app.put("/api/products/:productId", async (req, res) => {
-  const productId = req.params.productId;
-  const updatedProductData = req.body;
-
+app.get("/api/products/:id", async (req, res) => {
+  const { id } = req.params;
   try {
-    // Find the product by ID and update it with the new data
-    const updatedProduct = await Product.findByIdAndUpdate(
-      productId,
-      updatedProductData,
-      { new: true }
-    );
-
-    // If the product doesn't exist, return a 404 status
-    if (!updatedProduct) {
-      return res.status(404).json({ error: "Product not found" });
+    const product = await Product.findById(id);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
-
-    // Respond with the updated product data
-    res.json(updatedProduct);
+    res.json(product);
   } catch (error) {
-    console.error("Error updating product:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error fetching product:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
 
+// >>>>>>>>>>>>>>>>>>>>>>>>testikng roter >>>>>>>>>>>>>>>>>>>>>>>>>
+router.put("/products/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    res.json(updatedProduct);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.get("/products", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ending>>>>>>>>>>>>>
 // end of deleteuser func
 // end>>>>>>>>>>
 app.listen(3001, () => {
