@@ -340,44 +340,65 @@ app.get("/api/products", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-app.get("/api/products/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const product = await Product.findById(id);
-    if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+app
+  .route("/api/products/:id")
+  .get(async (req, res) => {
+    const { id } = req.params;
+    try {
+      const product = await Product.findById(id);
+      if (!product) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Product not found" });
+      }
+      res.json(product);
+    } catch (error) {
+      console.error("Error fetching product:", error.message);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
     }
-    res.json(product);
-  } catch (error) {
-    console.error("Error fetching product:", error.message);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
-});
+  })
+  .put(upload.single("file"), async (req, res) => {
+    const productId = req.params.id;
+    const { name, description, price, category } = req.body;
+    const updatedFields = { name, description, price, category };
+
+    try {
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Product not found" });
+      }
+
+      // Update text fields
+      Object.assign(product, updatedFields);
+
+      // Update the image field if a file was uploaded
+      if (req.file) {
+        product.image = req.file.filename;
+      }
+
+      await product.save();
+
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "Product updated successfully",
+          product,
+        });
+    } catch (error) {
+      console.error("Error updating product:", error.message);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    }
+  });
 
 // >>>>>>>>>>>>>>>>>>>>>>>>testikng roter >>>>>>>>>>>>>>>>>>>>>>>>>
-router.put("/products/:id", async (req, res) => {
-  const { id } = req.params;
 
-  try {
-    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    res.json(updatedProduct);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-router.get("/products", async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ending>>>>>>>>>>>>>
 // end of deleteuser func
 // end>>>>>>>>>>

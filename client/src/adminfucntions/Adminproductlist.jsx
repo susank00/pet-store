@@ -4,21 +4,25 @@ import axios from "axios";
 import AddProductForm from "../pages/AddProductForm";
 import { useDispatch } from "react-redux";
 import { setSelectedProductId } from "../redux/actions";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import Adminproductupdate from "./Adminproductupdate";
 
 const Adminproductlist = () => {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [showAddProductForm, setShowAddProductForm] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const [showAdminproductupdate, setShowAdminproductupdate] = useState(false);
 
   const handleAddProductClick = () => {
     setShowAddProductForm(true);
   };
+
   const handleEditClick = (productId) => {
     console.log("Product ID:", productId);
     dispatch(setSelectedProductId(productId));
-    navigate("/adminproductupdate");
+    // navigate("/adminproductupdate");
+    setShowAdminproductupdate(true);
     console.log(
       "Dispatched action:",
       dispatch(setSelectedProductId(productId))
@@ -45,7 +49,6 @@ const Adminproductlist = () => {
         <h1 className="bg-gray-600 text-5xl text-red-600 text-center p-2">
           All Products
         </h1>
-
         <div className="p-1 flex justify-center bg-gray-600">
           <button
             type="button"
@@ -56,6 +59,7 @@ const Adminproductlist = () => {
           </button>
         </div>
         {showAddProductForm && <AddProductForm />}
+        {showAdminproductupdate && <Adminproductupdate />}
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>

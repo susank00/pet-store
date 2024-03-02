@@ -40,6 +40,7 @@ const AddProductForm = () => {
         setPrice("");
         setFile(null); // Clear the file state
         setCategory("");
+        alert("product added successfully");
       })
       .catch((err) => console.error("Error adding product:", err));
   };
