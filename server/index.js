@@ -46,14 +46,26 @@ app.post("/getUserInfo", (req, res) => {
     });
 });
 // end
+// app.get("/employeeNames", async (req, res) => {
+//   try {
+//     // Fetch all employee names from the database
+//     const employeeNames = await EmployeeModel.find({}, "name");
+//     const nameList = employeeNames.map((employee) => employee.name);
+//     res.json(nameList);
+//   } catch (error) {
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+
 app.get("/employeeNames", async (req, res) => {
   try {
     // Fetch all employee names from the database
-    const employeeNames = await EmployeeModel.find({}, "name");
-    const nameList = employeeNames.map((employee) => employee.name);
-    res.json(nameList);
+    const employees = await EmployeeModel.find();
+
+    res.json(employees);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching products:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
 
