@@ -23,8 +23,8 @@ const Products = () => {
       website_url: "http://localhost:5173",
       featureFlag: process.env.REACT_APP_FEATURE_FLAG,
       amount: parseInt(product.price) * 100,
-      purchase_order_id: "test12",
-      purchase_order_name: "test",
+      purchase_order_id: product._id,
+      purchase_order_name: product.name,
       customer_info: {
         name: "Ashim Upadhaya",
         email: "example@gmail.com",
