@@ -15,6 +15,7 @@ import Adminmenu from "./adminfucntions/Adminmenu";
 import Profile from "./assets/Profile";
 import Adminproductlist from "./adminfucntions/Adminproductlist";
 import Adminproductupdate from "./adminfucntions/Adminproductupdate";
+import Success from "./pages/Success";
 const App = () => {
   return (
     <>
@@ -34,7 +35,9 @@ const App = () => {
           <Route path="/adminmenu" element={<Adminmenu />} />
           <Route path="/homepage" element={<Home />} />
           <Route path="/adminproductlist" element={<Adminproductlist />} />
+
           <Route path="/adminproductupdate" element={<Adminproductupdate />} />
+          <Route path="/success" element={<Success />} />
         </Routes>
       </BrowserRouter>
     </>

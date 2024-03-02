@@ -16,6 +16,30 @@ const Products = () => {
 
     fetchProducts();
   }, []);
+  const handleBuy = async (product) => {
+    console.log("hello", product);
+    const payload = {
+      return_url: "http://localhost:5173/success",
+      website_url: "http://localhost:5173",
+      featureFlag: process.env.REACT_APP_FEATURE_FLAG,
+      amount: parseInt(product.price) * 100,
+      purchase_order_id: "test12",
+      purchase_order_name: "test",
+      customer_info: {
+        name: "Ashim Upadhaya",
+        email: "example@gmail.com",
+        phone: "9811496763",
+      },
+    };
+    const response = await axios.post(
+      `http://localhost:3001/khalti-api`,
+      payload
+    );
+    console.log(response);
+    if (response) {
+      window.location.href = `${response?.data?.data?.payment_url}`;
+    }
+  };
 
   return (
     <div className="container mx-auto ">
@@ -47,6 +71,7 @@ const Products = () => {
             <button
               type="button"
               className="text-white w-50 ml-16 mt-1 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              onClick={() => handleBuy(product)}
             >
               Buy Now
             </button>

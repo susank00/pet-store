@@ -8,7 +8,8 @@ const crypto = require("crypto");
 const multer = require("multer");
 const path = require("path");
 const router = express.Router();
-
+const axios = require("axios");
+require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -382,13 +383,11 @@ app
 
       await product.save();
 
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "Product updated successfully",
-          product,
-        });
+      res.status(200).json({
+        success: true,
+        message: "Product updated successfully",
+        product,
+      });
     } catch (error) {
       console.error("Error updating product:", error.message);
       res
@@ -397,8 +396,33 @@ app
     }
   });
 
-// >>>>>>>>>>>>>>>>>>>>>>>>testikng roter >>>>>>>>>>>>>>>>>>>>>>>>>
+// khalti api>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+app.post("/khalti-api", async (req, res) => {
+  const payload = req.body;
+  const khaltiResponse = await axios.post(
+    "https://a.khalti.com/api/v2/epayment/initiate/",
+    payload,
+    {
+      headers: {
+        Authorization: "Key 1b802ef7cbe443ada84d578813bb6e3e",
+      },
+    }
+  );
+  if (khaltiResponse) {
+    res.json({
+      success: true,
+      data: khaltiResponse?.data,
+    });
+  } else {
+    res.json({
+      success: false,
+      message: "something went wrong",
+    });
+  }
+
+  console.log(khaltiResponse);
+});
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ending>>>>>>>>>>>>>
 // end of deleteuser func
 // end>>>>>>>>>>
