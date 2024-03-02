@@ -87,18 +87,17 @@ const Adminfunction = () => {
                   {employees.name}
                 </th>
                 <td className="px-6 py-4">{employees._id}</td>
-
                 <td className="px-6 py-4">{employees.role}</td>
                 <td className="px-6 py-4">{employees.email}</td>
-                {/* <td className="px-6 py-4">${product.price}</td> */}
-                {/* <td className="px-6 py-4 ">
+
+                <td className="px-6 py-4 ">
                   <button
                     onClick={() => handleEditClick(product._id)}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     Edit
                   </button>
-                </td> */}
+                </td>
               </tr>
             ))}
           </tbody>
