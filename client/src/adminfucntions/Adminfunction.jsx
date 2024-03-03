@@ -48,7 +48,7 @@ const Adminfunction = () => {
   return (
     <>
       <SideNavbar />
-      <div className="ml-64 relative overflow-x-auto">
+      <div className="ml-64 relative overflow-x-auto ">
         <h1 className="bg-gray-600 text-5xl text-red-600 text-center p-2">
           All emoloyees
         </h1>
@@ -69,9 +69,9 @@ const Adminfunction = () => {
                 email
               </th>
 
-              <th scope="col" className="px-6 py-3">
+              {/* <th scope="col" className="px-6 py-3">
                 modify
-              </th>
+              </th> */}
             </tr>
           </thead>
           <tbody>
@@ -90,14 +90,14 @@ const Adminfunction = () => {
                 <td className="px-6 py-4">{employees.role}</td>
                 <td className="px-6 py-4">{employees.email}</td>
 
-                <td className="px-6 py-4 ">
+                {/* <td className="px-6 py-4 ">
                   <button
                     onClick={() => handleEditClick(product._id)}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     Edit
                   </button>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
