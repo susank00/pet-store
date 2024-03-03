@@ -1,17 +1,25 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 import reducer from "./reducers"; // Import your user reducer here
 
-// Combine reducers if you have multiple reducers
+const persistConfig = {
+  key: "root",
+  storage,
+};
+
 const rootReducer = combineReducers({
   reducer, // Add more reducers here if needed
 });
 
-// Create the Redux store with the combined reducers
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   // Optionally, you can provide middleware, devtools configuration, etc.
 });
 
-export default store;
+const persistor = persistStore(store);
+
+export { store, persistor };

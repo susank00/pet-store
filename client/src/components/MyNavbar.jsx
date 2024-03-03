@@ -3,6 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import "/index.css";
+import { persistor } from "../redux/store";
 import axios from "axios";
 const MyNavbar = () => {
   const navigation = [
@@ -58,7 +59,8 @@ const MyNavbar = () => {
   };
   const onLogout = async () => {
     localStorage.removeItem("accessToken");
-    setIsLoggedIn(false); //
+    setIsLoggedIn(false);
+    await persistor.purge(); //
     navigate("/");
   };
   const onLogin = async () => {

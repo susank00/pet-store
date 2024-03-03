@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import { useSelector } from "react-redux";
+// import { selectUserId } from "../selectors/Selectors";
 const Products = () => {
+  // const selectedUserId = useSelector((state) => state.reducer.selectedUserId);
   const [products, setProducts] = useState([]);
+
+  const UserId = useSelector((state) => state.reducer.UserId);
+  // const userId = useSelector(selectUserId);
+  // const userId = useSelector((state) => state.reducer.userId);
+  console.log("Selected User ID from Redux store:", UserId);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -16,35 +23,11 @@ const Products = () => {
 
     fetchProducts();
   }, []);
-  const handleBuy = async (product) => {
-    console.log("hello", product);
-    const payload = {
-      return_url: "http://localhost:5173/success",
-      website_url: "http://localhost:5173",
-      featureFlag: process.env.REACT_APP_FEATURE_FLAG,
-      amount: parseInt(product.price) * 100,
-      purchase_order_id: product._id,
-      purchase_order_name: product.name,
-      customer_info: {
-        name: "Ashim Upadhaya",
-        email: "example@gmail.com",
-        phone: "9811496763",
-      },
-    };
-    const response = await axios.post(
-      `http://localhost:3001/khalti-api`,
-      payload
-    );
-    console.log(response);
-    if (response) {
-      window.location.href = `${response?.data?.data?.payment_url}`;
-    }
-  };
 
   return (
-    <div className="container mx-auto ">
-      <h2 className="text-2xl font-bold mb-4 justifycenter">Products</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+    <div className="container mx-auto">
+      <h2 className="text-2xl font-bold mb-4"> current user id:{UserId}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((product) => (
           <div
             key={product._id}
@@ -65,7 +48,7 @@ const Products = () => {
               <h3 className="text-lg font-semibold mb-2 text-gray-200">
                 {product.name}
               </h3>
-              <p className="text-gray-200  mb-2">{product.description}</p>
+              <p className="text-gray-200 mb-2">{product.description}</p>
             </div>
             <p className="text-gray-200 font-bold">Price: ${product.price}</p>
             <button
@@ -83,3 +66,15 @@ const Products = () => {
 };
 
 export default Products;
+// import { useSelector } from "react-redux";
+// // import { selectUserId } from "../selectors/Selectors";
+// const Products = () => {
+//   const UserId = useSelector((state) => state.reducer.UserId);
+//   // const userId = useSelector(selectUserId);
+//   // const userId = useSelector((state) => state.reducer.userId);
+//   console.log("Selected User ID from Redux store:", UserId);
+
+//   return <div>User ID: {UserId}</div>;
+// };
+
+// export default Products;

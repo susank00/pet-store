@@ -4,21 +4,23 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 
 import SideNavbar from "../components/SideNavbar";
+import { useDispatch } from "react-redux";
+import { setUserId } from "../redux/actions";
 
 const Profile = () => {
   // const location = useLocation();
   const [name, setName] = useState("");
-
-  // const [password, setPassword] = useState("");
+  // const [userId, setUserId] = useState("");
   const [role, setRole] = useState("");
-  // const userEmail = location.state && location.state.email;
   const [loading, setLoading] = useState(true);
 
+  const dispatch = useDispatch();
   useEffect(() => {
     // Fetch user info only once when the component mounts
 
     getProfile();
   }, []);
+
   const getProfile = async () => {
     const getAccessToken = localStorage.getItem("accessToken");
     try {
@@ -28,10 +30,15 @@ const Profile = () => {
           Authorization: `Bearer ${getAccessToken}`,
         },
       });
-      setName(response.data.user.name);
-      setRole(response.data.user.role);
-      setLoading(false);
-      console.log(response);
+
+      // setUserId(response.data.user.userId);
+      // setName(response.data.user.name);
+      // setRole(response.data.user.role);
+      // setLoading(false);
+      // console.log(response);
+      const userId = response.data.user.userId;
+      dispatch(setUserId(userId));
+      console.log("Dispatched action:", dispatch(setUserId(userId)));
     } catch (error) {
       if (error.response) {
         alert(error.response.data.errors[0].message);
