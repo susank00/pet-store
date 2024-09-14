@@ -1,4 +1,4 @@
-This is a full stack web of login panel made form MERN stack .
+This is a full stack ecommerce of  petstore made from MERN stack .
 It has frontend and backend 
 front end -React js
 backend:Node js,express,and mongodb as database
@@ -9,6 +9,7 @@ in client page one can register the email and password and will be saved in the 
 then can get logged in 
 features :---
 user can change email and password from their profile page
+payment option: khalti 
 -----------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------
 server page>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
