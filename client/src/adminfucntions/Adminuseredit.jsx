@@ -69,6 +69,10 @@ const AdminUserEdit = () => {
           role,
         }
       );
+      setName(response.data.name);
+      setEmail(response.data.email);
+      setPassword(response.data.password);
+      setRole(response.data.role);
       console.log("User updated successfully:", response.data);
       setShowForm(false);
     } catch (error) {
@@ -115,7 +119,7 @@ const AdminUserEdit = () => {
   }, [dragging]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p>Loadingss</p>;
   }
 
   if (error) {
