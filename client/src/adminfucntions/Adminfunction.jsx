@@ -1,11 +1,28 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import SideNavbar from "../components/SideNavbar";
+import { useDispatch } from "react-redux";
+import { setSelectedEmployeesId } from "../redux/actions";
+import AdminUserEdit from "./Adminuseredit";
 
 const Adminfunction = () => {
+  const dispatch = useDispatch();
+
   const [employees, setEmployees] = useState([]);
   const [userName, setUserName] = useState("");
   const [result, setResult] = useState("");
+  const [showAdminpuserupdate, setShowAdminuserupdate] = useState(false);
+
+  const handleEditClick = (employeesId) => {
+    console.log("employee ID:", employeesId);
+    dispatch(setSelectedEmployeesId(employeesId));
+    // navigate("/adminproductupdate");
+    setShowAdminuserupdate(true);
+    console.log(
+      "Dispatched action:",
+      dispatch(setSelectedEmployeesId(employeesId))
+    );
+  };
   // function for listing employess name
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -18,6 +35,7 @@ const Adminfunction = () => {
     };
     fetchEmployees();
   }, []);
+
   // end>>>
   // function for deleting user
   const deleteUser = async () => {
@@ -41,9 +59,6 @@ const Adminfunction = () => {
   // const handleClick = () => {
   //   fetchEmployees();
   // };
-  const onnClick = () => {
-    deleteUser();
-  };
 
   return (
     <>
@@ -52,7 +67,7 @@ const Adminfunction = () => {
         <h1 className="bg-gray-600 text-5xl text-red-600 text-center p-2">
           All emoloyees
         </h1>
-
+        {showAdminpuserupdate && <AdminUserEdit />}
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -69,9 +84,9 @@ const Adminfunction = () => {
                 email
               </th>
 
-              {/* <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3">
                 modify
-              </th> */}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -90,14 +105,14 @@ const Adminfunction = () => {
                 <td className="px-6 py-4">{employees.role}</td>
                 <td className="px-6 py-4">{employees.email}</td>
 
-                {/* <td className="px-6 py-4 ">
+                <td className="px-6 py-4 ">
                   <button
-                    onClick={() => handleEditClick(product._id)}
+                    onClick={() => handleEditClick(employees._id)}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     Edit
                   </button>
-                </td> */}
+                </td>
               </tr>
             ))}
           </tbody>

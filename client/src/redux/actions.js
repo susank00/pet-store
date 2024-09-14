@@ -14,3 +14,8 @@ export const setSelectedProductId = (productId) => ({
   type: SET_SELECTED_PRODUCT_ID,
   payload: productId,
 });
+export const SET_SELECTED_EMPLOYEES_ID = "SET_EMPLOYEES_PRODUCT_ID";
+export const setSelectedEmployeesId = (employeesId) => ({
+  type: SET_SELECTED_EMPLOYEES_ID,
+  payload: employeesId,
+});

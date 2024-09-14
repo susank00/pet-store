@@ -23,7 +23,30 @@ const Products = () => {
 
     fetchProducts();
   }, []);
-
+  const handleBuy = async (product) => {
+    console.log("hello", product);
+    const payload = {
+      return_url: "http://localhost:5173/success",
+      website_url: "http://localhost:5173",
+      featureFlag: process.env.REACT_APP_FEATURE_FLAG,
+      amount: parseInt(product.price) * 100,
+      purchase_order_id: { UserId },
+      purchase_order_name: "test",
+      customer_info: {
+        name: "Ashim Upadhaya",
+        email: "example@gmail.com",
+        phone: "9811496763",
+      },
+    };
+    const response = await axios.post(
+      `http://localhost:3001/khalti-api`,
+      payload
+    );
+    console.log(response);
+    if (response) {
+      window.location.href = `${response?.data?.data?.payment_url}`;
+    }
+  };
   return (
     <div className="container mx-auto">
       <h2 className="text-2xl font-bold mb-4"> current user id:{UserId}</h2>

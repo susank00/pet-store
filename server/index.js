@@ -412,7 +412,47 @@ app
         .json({ success: false, message: "Internal server error" });
     }
   });
+// api to get employye by employee id
+app.route("/employeeNames/:id").get(async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const employee = await EmployeeModel.findById(id);
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.status(200).json(employee);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching employee", error });
+  }
+});
+app.route("/employeeNames/:id").put(async (req, res) => {
+  const { id } = req.params;
+  const { name, email, password, role } = req.body;
+
+  try {
+    const updatedEmployee = await EmployeeModel.findByIdAndUpdate(
+      id,
+      {
+        name,
+        email,
+        password,
+        role,
+      },
+      { new: true, runValidators: true } // Return the updated document and ensure validation
+    );
+
+    if (!updatedEmployee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.status(200).json(updatedEmployee);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating employee", error });
+  }
+});
 // khalti api>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 app.post("/khalti-api", async (req, res) => {
