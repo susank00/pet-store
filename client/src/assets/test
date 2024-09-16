@@ -2,128 +2,92 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-const Adminproductupdate = () => {
-  const selectedProductId = useSelector(
-    (state) => state.reducer.selectedProductId
-  );
-  const [product, setProduct] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    category: "",
-    price: "",
-    description: "",
-    file: null,
-  });
-  const [isLoading, setIsLoading] = useState(false);
+const Products = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const UserId = useSelector((state) => state.reducer.UserId);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      setIsLoading(true);
+    const fetchProducts = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3001/api/products/${selectedProductId}`
-        );
-        setProduct(response.data);
-        setFormData({
-          name: response.data.name,
-          category: response.data.category,
-          price: response.data.price,
-          description: response.data.description,
-        });
+        const response = await axios.get("http://localhost:3001/api/products");
+        setProducts(response.data);
       } catch (error) {
-        setError(error.message);
+        console.error("Error fetching products:", error);
+        setError("Failed to load products.");
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
-    if (selectedProductId) {
-      fetchProduct();
-    }
-  }, [selectedProductId]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    fetchProducts();
+  }, []);
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, file: e.target.files[0] });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleBuy = async (product) => {
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("name", formData.name);
-      formDataToSend.append("category", formData.category);
-      formDataToSend.append("price", formData.price);
-      formDataToSend.append("description", formData.description);
-      if (formData.file) {
-        formDataToSend.append("file", formData.file);
-      }
+      const payload = {
+        amount: product.price.toString(),
+        totalAmount: (product.price + 10).toString(),
+        transaction_uuid: "some-unique-id", // Generate or use a UUID
+      };
 
-      const response = await axios.put(
-        `http://localhost:3001/api/products/${selectedProductId}`,
-        formDataToSend
+      const response = await axios.post(
+        "http://localhost:3001/initialize-esewa",
+        payload
       );
-      setProduct(response.data);
 
-      // Optionally, you can show a success message or navigate to another page
+      if (response.data?.data?.payment_url) {
+        window.location.href = response.data.data.payment_url;
+      } else {
+        console.error("Invalid response from payment API.");
+      }
     } catch (error) {
-      setError(error.message);
+      console.error("Error processing payment:", error);
     }
   };
 
-  if (isLoading) {
-    return <p>Loading...</p>;
+  if (loading) {
+    return <p>Loading products...</p>;
   }
 
   if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  if (!product) {
-    return <p>No product found with the selected ID</p>;
+    return <p>{error}</p>;
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        placeholder="Product Name"
-      />
-      <input
-        type="text"
-        name="category"
-        value={formData.category}
-        onChange={handleChange}
-        placeholder="Product Category"
-      />
-      <input
-        type="number"
-        name="price"
-        value={formData.price}
-        onChange={handleChange}
-        placeholder="Price"
-      />
-      <textarea
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        placeholder="Product Description"
-      />
-      <input
-        type="file"
-        name="file"
-        onChange={handleFileChange}
-        accept=".jpeg, .png ,.jpg"
-      />
-      <button type="submit">Update Product</button>
-    </form>
+    <div className="container mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Current User ID: {UserId}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {products.map((product) => (
+          <div
+            key={product._id}
+            className="bg-gray-600 shadow-md rounded p-4 flex flex-col justify-between"
+          >
+            <div>
+              <img
+                style={{ height: "150px", width: "100%", objectFit: "fill" }}
+                src={`http://localhost:3001/images/${product.image}`}
+                alt={product.name}
+              />
+              <h3 className="text-lg font-semibold mb-2 text-gray-200">
+                {product.name}
+              </h3>
+              <p className="text-gray-200 mb-2">{product.description}</p>
+            </div>
+            <p className="text-gray-200 font-bold">Price: ${product.price}</p>
+            <button
+              type="button"
+              className="text-white w-50 ml-16 mt-1 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              onClick={() => handleBuy(product)}
+            >
+              Buy Now
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
-export default Adminproductupdate;
+export default Products;

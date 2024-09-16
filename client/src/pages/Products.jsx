@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 const Products = () => {
   // const selectedUserId = useSelector((state) => state.reducer.selectedUserId);
   const [products, setProducts] = useState([]);
+  const [username, setUsername] = useState([]);
 
   const UserId = useSelector((state) => state.reducer.UserId);
   // const userId = useSelector(selectUserId);
@@ -20,7 +21,18 @@ const Products = () => {
         console.error("Error fetching products:", error);
       }
     };
-
+    const fetchUsername = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/profile/${UserId}`
+        );
+        setUsername(response.data.user.name);
+        console.log(response.data.user.name);
+      } catch (error) {
+        console.error("Error fetching username:", error);
+      }
+    };
+    fetchUsername();
     fetchProducts();
   }, []);
   const handleBuy = async (product) => {
@@ -30,10 +42,10 @@ const Products = () => {
       website_url: "http://localhost:5173",
       featureFlag: process.env.REACT_APP_FEATURE_FLAG,
       amount: parseInt(product.price) * 100,
-      purchase_order_id: { UserId },
+      purchase_order_id: product._id,
       purchase_order_name: "test",
       customer_info: {
-        name: "Ashim Upadhaya",
+        name: username,
         email: "example@gmail.com",
         phone: "9811496763",
       },

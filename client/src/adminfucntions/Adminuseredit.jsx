@@ -146,68 +146,68 @@ const AdminUserEdit = () => {
               }}
               className="absolute top-1 right-1 text-white bg-red-600 p-1 rounded-full"
             >
-              X
+              CLOSE
             </button>
             <h2 className=" text-center text-2xl ">Update User</h2>
-          </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
-                User ID: {selectedEmployeesId}
-              </label>
-            </div>
-            <div className="mb-3">
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
-                Name
-              </label>
-              <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
-                Email
-              </label>
-              <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
-                Password
-              </label>
-              <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
-                Role
-              </label>
-              <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                type="text"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              />
-            </div>
-            <button
-              onClick={handleSubmit}
-              className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 mt-4"
-            >
-              Update User
-            </button>
-          </form>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                  User ID: {selectedEmployeesId}
+                </label>
+              </div>
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                  Name
+                </label>
+                <input
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                  Email
+                </label>
+                <input
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                  Password
+                </label>
+                <input
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                  Role
+                </label>
+                <input
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  type="text"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+              </div>
+              <button
+                onClick={handleSubmit}
+                className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 mt-4"
+              >
+                Update User
+              </button>
+            </form>
+          </div>
         </div>
       )}
     </div>

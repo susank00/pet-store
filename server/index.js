@@ -133,6 +133,45 @@ app.get("/profile", (req, res) => {
   });
 });
 // end of authorization and token >>>> -+963
+//  to get user name from user id
+
+app.get("/profile/:userId", (req, res) => {
+  // Extract the userId from the URL parameters
+  const { userId } = req.params;
+
+  // Fetch the user profile from the database using the provided userId
+  EmployeeModel.findById(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      // Return the user profile data
+      res.json({
+        success: true,
+        message: "Profile fetched successfully",
+        user: {
+          userId: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching user profile:", error.message);
+      res.status(500).json({
+        success: false,
+        message: "Internal server error",
+      });
+    });
+});
+
+// end of get user id
+
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 

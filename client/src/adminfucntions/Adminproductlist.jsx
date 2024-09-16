@@ -6,14 +6,16 @@ import { useDispatch } from "react-redux";
 import { setSelectedProductId } from "../redux/actions";
 // import { useNavigate } from "react-router-dom";
 import Adminproductupdate from "./Adminproductupdate";
+import { useNavigate } from "react-router-dom";
 
 const Adminproductlist = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   // const navigate = useNavigate();
   const [showAdminproductupdate, setShowAdminproductupdate] = useState(false);
-
+  const getAccessToken = localStorage.getItem("accessToken");
   const handleAddProductClick = () => {
     setShowAddProductForm(true);
   };
@@ -28,19 +30,30 @@ const Adminproductlist = () => {
       dispatch(setSelectedProductId(productId))
     );
   };
-
   useEffect(() => {
+    if (!getAccessToken) {
+      navigate("/login"); // Redirect to login if token is not found
+      return;
+    }
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/products");
+        const response = await axios.get("http://localhost:3001/api/products", {
+          headers: {
+            Authorization: `Bearer ${getAccessToken}`,
+          },
+          timeout: 10000,
+        });
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
+        if (error.response && error.response.status === 401) {
+          navigate("/login");
+        }
       }
     };
 
     fetchProducts();
-  }, []);
+  }, [getAccessToken, navigate]);
 
   return (
     <>
