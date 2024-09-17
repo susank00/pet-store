@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
-const EmployeeSchema = new mongoose.Schema({
+const CustomerSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -14,19 +14,16 @@ const EmployeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
-  image: String,
-
   role: {
     type: String,
 
     default: "user",
   },
 });
-EmployeeSchema.pre("save", async function (next) {
+CustomerSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
-const EmployeeModel = mongoose.model("employees", EmployeeSchema);
-module.exports = EmployeeModel;
+const CustomerModel = mongoose.model("Customer", CustomerSchema);
+module.exports = CustomerModel;

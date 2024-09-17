@@ -197,7 +197,7 @@ app.post("/login", async (req, res) => {
         const accessToken = jwt.sign(
           { userId: user._id, email: user.email, username: user.name },
           secretKey,
-          { expiresIn: "240s" } // Short-lived access token
+          { expiresIn: "100m" } // Short-lived access token
         );
         console.log(accessToken);
         // Generate a new refresh token with a longer expiration time
@@ -373,8 +373,24 @@ const upload = multer({
   storage: storage,
 });
 
+const EmployeeImage = require("./models/Employee");
+const storage1 = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+const upload1 = multer({
+  storage: storage,
+});
+
 app.post("/api/products", upload.single("file"), async (req, res) => {
-  const { name, description, price, image, category } = req.body;
+  const { name, description, price, image, category, quantity } = req.body;
   try {
     const newProduct = await Product.create({
       name,
@@ -382,6 +398,7 @@ app.post("/api/products", upload.single("file"), async (req, res) => {
       price,
       image: req.file.filename,
       category,
+      quantity,
     });
     console.log(res);
     res.status(201).json({ success: true, product: newProduct });
@@ -423,8 +440,8 @@ app
   })
   .put(upload.single("file"), async (req, res) => {
     const productId = req.params.id;
-    const { name, description, price, category } = req.body;
-    const updatedFields = { name, description, price, category };
+    const { name, description, price, category, quantity } = req.body;
+    const updatedFields = { name, description, price, category, quantity };
 
     try {
       const product = await Product.findById(productId);
@@ -472,11 +489,12 @@ app.route("/employeeNames/:id").get(async (req, res) => {
     res.status(500).json({ message: "Error fetching employee", error });
   }
 });
-app.route("/employeeNames/:id").put(async (req, res) => {
+app.route("/employeeNames/:id").put(upload.single("file"), async (req, res) => {
   const { id } = req.params;
   const { name, email, password, role } = req.body;
 
   try {
+    // Find and update the employee
     const updatedEmployee = await EmployeeModel.findByIdAndUpdate(
       id,
       {
@@ -484,6 +502,7 @@ app.route("/employeeNames/:id").put(async (req, res) => {
         email,
         password,
         role,
+        image: req.file ? req.file.filename : undefined, // Update image filename if file exists
       },
       { new: true, runValidators: true } // Return the updated document and ensure validation
     );

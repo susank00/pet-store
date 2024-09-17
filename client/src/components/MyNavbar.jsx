@@ -2,9 +2,13 @@ import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 import "/index.css";
 import { persistor } from "../redux/store";
 import axios from "axios";
+import { setUserId } from "../redux/actions";
+
 const MyNavbar = () => {
   const navigation = [
     { name: "Dashboard", href: "/", current: true },
@@ -13,15 +17,17 @@ const MyNavbar = () => {
   ];
 
   const [isloggedin, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState(null);
+  const [image, setImage] = useState(null);
+  const [employees, setEmployees] = useState(null);
 
   const navigate = useNavigate();
-  const [userName, setUserName] = useState(null);
   const token = localStorage.getItem("accessToken");
+  const dispatch = useDispatch();
+  const UserId = useSelector((state) => state.reducer.UserId);
 
-  // useEffect(() => {
-  //   checkUserStatus();
-  //   // Fetch user info only once when the component mounts
-  // }, [getAccessToken]);
+  console.log("Selected User ID from Redux store:", UserId);
+
   useEffect(() => {
     const getProfile = async () => {
       if (token) {
@@ -36,6 +42,7 @@ const MyNavbar = () => {
           const { success, user } = response.data;
 
           if (success) {
+            dispatch(setUserId(user._id)); // Dispatch the action to set the UserId
             setUserName(user.name);
             setIsLoggedIn(true);
           } else {
@@ -48,17 +55,37 @@ const MyNavbar = () => {
         }
       }
     };
+
     if (token) {
       getProfile();
     }
-  }, [token]);
+  }, [token, dispatch]);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (UserId) {
+        try {
+          const response = await axios.get(
+            `http://localhost:3001/employeeNames/${UserId}`
+          );
+          setEmployees(response.data);
+          setImage(response.data.image);
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+        }
+      }
+    };
+
+    fetchProfile();
+  }, [UserId, setEmployees]);
 
   const onLogout = async () => {
     localStorage.removeItem("accessToken");
     setUserName(null);
     setIsLoggedIn(false);
+    setEmployees(null);
     await persistor.purge();
-    alert("you are being logged out due to inactive seesion");
+    alert("You are being logged out due to inactive session.");
     navigate("/");
   };
 
@@ -71,13 +98,13 @@ const MyNavbar = () => {
   }
 
   return (
-    <Disclosure as="nav" className="bg-gray-800 ">
+    <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
         <>
-          <div className=" mx-auto max-w-10xl px- sm:px-6 lg:px-8 ">
-            <div className="relative flex h-16 items-center justify-between z-10 ">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden ">
-                {/* Mobile menu button*/}
+          <div className="mx-auto max-w-10xl px- sm:px-6 lg:px-8">
+            <div className="relative flex h-16 items-center justify-between z-10">
+              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                {/* Mobile menu button */}
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
@@ -150,7 +177,7 @@ const MyNavbar = () => {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src={`http://localhost:3001/images/${employees?.image}`}
                         alt=""
                       />
                     </Menu.Button>
@@ -187,19 +214,6 @@ const MyNavbar = () => {
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
                             Sign out
                           </a>
                         )}
@@ -210,30 +224,10 @@ const MyNavbar = () => {
               </div>
             </div>
           </div>
-
-          <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={classNames(
-                    item.current
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                    "block rounded-md px-3 py-2 text-base font-medium"
-                  )}
-                  aria-current={item.current ? "page" : undefined}
-                >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-            </div>
-          </Disclosure.Panel>
         </>
       )}
     </Disclosure>
   );
 };
+
 export default MyNavbar;

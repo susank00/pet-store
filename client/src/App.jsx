@@ -14,6 +14,7 @@ import Adminmenu from "./adminfucntions/Adminmenu";
 import Profile from "./assets/Profile";
 import Adminproductlist from "./adminfucntions/Adminproductlist";
 import Adminproductupdate from "./adminfucntions/Adminproductupdate";
+import Profileedit from "./userfunctions/profileedit";
 import Success from "./pages/Success";
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/adminproductlist" element={<Adminproductlist />} />
           <Route path="/adminfunction" element={<Adminfunction />} />
           <Route path="/adminproductupdate" element={<Adminproductupdate />} />
+          <Route path="/profileedit" element={<Profileedit />} />
           <Route path="/success" element={<Success />} />
         </Routes>
       </BrowserRouter>

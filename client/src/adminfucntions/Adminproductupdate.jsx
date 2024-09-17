@@ -10,7 +10,7 @@ const Adminproductupdate = () => {
     setPrice("");
     setDescription("");
     setFile(null);
-    setQuality("");
+    setQuantity("");
     setShowForm(false);
   };
 
@@ -146,7 +146,7 @@ const Adminproductupdate = () => {
               }}
               className="absolute top-1 right-1 text-white bg-red-600 p-1 rounded-full"
             >
-              X
+              CLose
             </button>
             <h2 className="flex justify-center text-gray-200 p-1 text-2xl">
               Update product
