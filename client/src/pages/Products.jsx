@@ -36,27 +36,44 @@ const Products = () => {
     fetchProducts();
   }, []);
   const handleBuy = async (product) => {
-    console.log("hello", product);
+    // Validate product fields
+
+    // Validate username
+    if (typeof username !== "string" || username.trim() === "") {
+      alert("Username is required. Please fetch the username first.");
+      return;
+    }
+
+    console.log("Username:", username);
+
     const payload = {
       return_url: "http://localhost:5173/success",
       website_url: "http://localhost:5173",
       featureFlag: process.env.REACT_APP_FEATURE_FLAG,
       amount: parseInt(product.price) * 100,
       purchase_order_id: product._id,
-      purchase_order_name: "test",
+      purchase_order_name: product.name,
       customer_info: {
         name: username,
         email: "example@gmail.com",
         phone: "9811496763",
       },
     };
-    const response = await axios.post(
-      `http://localhost:3001/khalti-api`,
-      payload
-    );
-    console.log(response);
-    if (response) {
-      window.location.href = `${response?.data?.data?.payment_url}`;
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/khalti-api`,
+        payload
+      );
+      console.log(response);
+      if (response?.data?.data?.payment_url) {
+        window.location.href = `${response.data.data.payment_url}`;
+      } else {
+        alert("Payment URL is not available.");
+      }
+    } catch (error) {
+      console.error("Error handling buy request:", error);
+      alert("There was an error processing your request.");
     }
   };
   return (
