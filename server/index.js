@@ -197,22 +197,22 @@ app.post("/login", async (req, res) => {
         const accessToken = jwt.sign(
           { userId: user._id, email: user.email, username: user.name },
           secretKey,
-          { expiresIn: "100s" } // Short-lived access token
+          { expiresIn: "240s" } // Short-lived access token
         );
         console.log(accessToken);
         // Generate a new refresh token with a longer expiration time
-        const refreshToken = jwt.sign(
-          { userId: user._id, email: user.email, username: user.name },
-          secretKey,
-          { expiresIn: "7d" } // Longer-lived refresh token
-        );
+        // const refreshToken = jwt.sign(
+        //   { userId: user._id, email: user.email, username: user.name },
+        //   secretKey,
+        //   { expiresIn: "7d" } // Longer-lived refresh token
+        // );
 
         res.json({
           success: true,
           message: "Login successful",
           user: { name: user.name, email: user.email },
           accessToken: accessToken,
-          refreshToken: refreshToken,
+          // refreshToken: refreshToken,
         });
       } else {
         res.json({ success: false, message: "Incorrect password" });

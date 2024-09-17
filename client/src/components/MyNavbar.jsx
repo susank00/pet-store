@@ -13,58 +13,56 @@ const MyNavbar = () => {
   ];
 
   const [isloggedin, setIsLoggedIn] = useState(false);
+
   const navigate = useNavigate();
   const [userName, setUserName] = useState(null);
-  const getAccessToken = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken");
 
-  useEffect(() => {
-    checkUserStatus();
-    // Fetch user info only once when the component mounts
-  }, [getAccessToken]);
+  // useEffect(() => {
+  //   checkUserStatus();
+  //   // Fetch user info only once when the component mounts
+  // }, [getAccessToken]);
   useEffect(() => {
     const getProfile = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/profile", {
-          timeout: 10000,
-          headers: {
-            Authorization: `Bearer ${getAccessToken}`,
-          },
-        });
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:3001/profile", {
+            timeout: 10000,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
-        const { success, user } = response.data;
+          const { success, user } = response.data;
 
-        if (success) {
-          setUserName(user.name);
-        } else {
-          console.log("Error fetching user profile:", response.data.message);
+          if (success) {
+            setUserName(user.name);
+            setIsLoggedIn(true);
+          } else {
+            console.log("Error fetching user profile:", response.data.message);
+            onLogout();
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+          onLogout();
         }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
       }
     };
-
-    if (getAccessToken) {
+    if (token) {
       getProfile();
     }
-  }, [getAccessToken]);
+  }, [token]);
 
-  // end of the fucntion
-  const checkUserStatus = async () => {
-    const getAccessToken = localStorage.getItem("accessToken");
-    if (getAccessToken) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  };
   const onLogout = async () => {
     localStorage.removeItem("accessToken");
     setUserName(null);
     setIsLoggedIn(false);
-    await persistor.purge(); //
+    await persistor.purge();
+    alert("you are being logged out due to inactive seesion");
     navigate("/");
   };
-  const onLogin = async () => {
+
+  const onLogin = () => {
     navigate("/login");
   };
 
