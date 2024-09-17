@@ -9,8 +9,9 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [react()],
     build: {
+      outDir: "build", // Change output directory to 'build'
       rollupOptions: {
-        external: ["@heroicons/react"], // Externalize Heroicons to prevent build errors
+        external: ["@heroicons/react"], // Externalize Heroicons
       },
     },
   };
