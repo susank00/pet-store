@@ -2,12 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import "/index.css";
 import { persistor } from "../redux/store";
 import axios from "axios";
-import { setUserId } from "../redux/actions";
 
 const MyNavbar = () => {
   const navigation = [
@@ -18,12 +17,11 @@ const MyNavbar = () => {
 
   const [isloggedin, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState(null);
-  const [image, setImage] = useState(null);
   const [employees, setEmployees] = useState(null);
 
   const navigate = useNavigate();
   const token = localStorage.getItem("accessToken");
-  const dispatch = useDispatch();
+
   const UserId = useSelector((state) => state.reducer.UserId);
 
   console.log("Selected User ID from Redux store:", UserId);
@@ -42,7 +40,6 @@ const MyNavbar = () => {
           const { success, user } = response.data;
 
           if (success) {
-            dispatch(setUserId(user._id)); // Dispatch the action to set the UserId
             setUserName(user.name);
             setIsLoggedIn(true);
           } else {
@@ -59,7 +56,7 @@ const MyNavbar = () => {
     if (token) {
       getProfile();
     }
-  }, [token, dispatch]);
+  }, [token]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -69,7 +66,6 @@ const MyNavbar = () => {
             `http://localhost:3001/employeeNames/${UserId}`
           );
           setEmployees(response.data);
-          setImage(response.data.image);
         } catch (error) {
           console.error("Error fetching profile:", error);
         }
