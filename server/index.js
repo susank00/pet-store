@@ -14,9 +14,14 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
-mongoose.connect(
-  "mongodb+srv://susankhatri00:aJVDLJMCi19mtNsQ@mern-login-db.zd7m4v9.mongodb.net/employee"
-);
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB", err);
+  });
 const generateRandomKey = () => {
   return crypto.randomBytes(32).toString("hex");
 };
@@ -172,53 +177,53 @@ app.get("/profile/:userId", (req, res) => {
 
 // end of get user id
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email && !password) {
+  if (!email || !password) {
     return res.json({
       success: false,
-      message: "Please enter email and password",
-    });
-  } else if (!email) {
-    return res.json({
-      success: false,
-      message: "Please enter email address",
-    });
-  } else if (!password) {
-    return res.json({
-      success: false,
-      message: "Please enter password",
+      message: "Please enter both email and password",
     });
   }
-  EmployeeModel.findOne({ email: email })
-    .then((user) => {
-      if (user) {
-        if (user.password === password) {
-          const accessToken = jwt.sign(
-            { userId: user._id, email: user.email },
-            secretKey,
-            { expiresIn: "1h" }
-          );
-          res.json({
-            success: true,
-            message: "Login successful",
-            user: { name: user.name, email: user.email },
-            accessToken: accessToken,
-          });
-        } else {
-          res.json({ success: false, message: "Incorrect password" });
-        }
+
+  try {
+    const user = await EmployeeModel.findOne({ email: email });
+
+    if (user) {
+      // Here, you should ideally use bcrypt to compare hashed passwords
+      if (user.password === password) {
+        // Generate a new access token with a short expiration time
+        const accessToken = jwt.sign(
+          { userId: user._id, email: user.email, username: user.name },
+          secretKey,
+          { expiresIn: "100s" } // Short-lived access token
+        );
+        console.log(accessToken);
+        // Generate a new refresh token with a longer expiration time
+        const refreshToken = jwt.sign(
+          { userId: user._id, email: user.email, username: user.name },
+          secretKey,
+          { expiresIn: "7d" } // Longer-lived refresh token
+        );
+
+        res.json({
+          success: true,
+          message: "Login successful",
+          user: { name: user.name, email: user.email },
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        });
       } else {
-        res.json({ success: false, message: "User not found" });
+        res.json({ success: false, message: "Incorrect password" });
       }
-    })
-    .catch((error) => {
-      console.error("Error during login:", error.message);
-      res
-        .status(500)
-        .json({ success: false, message: "Internal server error" });
-    });
+    } else {
+      res.json({ success: false, message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error during login:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
 // end-->>>>>>>>>>>>>
@@ -496,12 +501,13 @@ app.route("/employeeNames/:id").put(async (req, res) => {
 
 app.post("/khalti-api", async (req, res) => {
   const payload = req.body;
+  const authkey = process.env.KHALTI_SECRET_KEY;
   const khaltiResponse = await axios.post(
     "https://a.khalti.com/api/v2/epayment/initiate/",
     payload,
     {
       headers: {
-        Authorization: "Key 1b802ef7cbe443ada84d578813bb6e3e",
+        Authorization: `Key ${authkey}`,
       },
     }
   );

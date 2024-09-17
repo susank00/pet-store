@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 // import { Carousel } from "flowbite-react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
@@ -9,10 +9,10 @@ import { setUserId } from "../redux/actions";
 
 const Profile = () => {
   // const location = useLocation();
-  const [name, setName] = useState("");
-  // const [userId, setUserId] = useState("");
-  const [role, setRole] = useState("");
-  const [loading, setLoading] = useState(true);
+  // const [name, setName] = useState("");
+  // // const [userId, setUserId] = useState("");
+  // const [role, setRole] = useState("");
+  // const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
   useEffect(() => {

@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const EmployeeSchema = new mongoose.Schema({
   name: {
@@ -18,6 +19,11 @@ const EmployeeSchema = new mongoose.Schema({
 
     default: "user",
   },
+});
+EmployeeSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
 });
 const EmployeeModel = mongoose.model("employees", EmployeeSchema);
 module.exports = EmployeeModel;

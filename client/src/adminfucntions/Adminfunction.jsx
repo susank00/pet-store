@@ -46,7 +46,7 @@ const Adminfunction = () => {
     };
 
     fetchEmployees();
-  }, [getAccessToken, navigate]);
+  }, [getAccessToken, navigate, employees, showAdminUserEdit]);
 
   // Handle edit click
   const handleEditClick = (employeeId) => {

@@ -27,7 +27,7 @@ const Products = () => {
           `http://localhost:3001/profile/${UserId}`
         );
         setUsername(response.data.user.name);
-        console.log(response.data.user.name);
+        // console.log(response.data.user.name);
       } catch (error) {
         console.error("Error fetching username:", error);
       }

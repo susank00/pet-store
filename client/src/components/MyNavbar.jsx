@@ -20,7 +20,7 @@ const MyNavbar = () => {
   useEffect(() => {
     checkUserStatus();
     // Fetch user info only once when the component mounts
-  }, []);
+  }, [getAccessToken]);
   useEffect(() => {
     const getProfile = async () => {
       try {
@@ -59,6 +59,7 @@ const MyNavbar = () => {
   };
   const onLogout = async () => {
     localStorage.removeItem("accessToken");
+    setUserName(null);
     setIsLoggedIn(false);
     await persistor.purge(); //
     navigate("/");
