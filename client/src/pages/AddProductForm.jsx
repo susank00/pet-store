@@ -9,6 +9,7 @@ const AddProductForm = () => {
   const [price, setPrice] = useState("");
   const [file, setFile] = useState("");
   const [category, setCategory] = useState("");
+  const [quantity, setQuantity] = useState("");
   const [showForm, setShowForm] = useState(true);
   const handleClose = () => {
     setName("");
@@ -16,6 +17,7 @@ const AddProductForm = () => {
     setPrice("");
     setDescription("");
     setFile(null);
+    setQuantity("");
     setShowForm(false);
   };
 
@@ -28,6 +30,7 @@ const AddProductForm = () => {
     formData.append("description", description);
     formData.append("price", price);
     formData.append("category", category);
+    formData.append("quantity", quantity);
 
     axios
       .post("http://localhost:3001/api/products", formData)
@@ -40,6 +43,7 @@ const AddProductForm = () => {
         setPrice("");
         setFile(null); // Clear the file state
         setCategory("");
+        setQuantity("");
         alert("product added successfully");
       })
       .catch((err) => console.error("Error adding product:", err));
@@ -102,6 +106,16 @@ const AddProductForm = () => {
               placeholder="Price"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+            />
+            <label className="block  text-sm font-medium text-gray-900 dark:text-gray-200">
+              Quantity
+            </label>
+            <input
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              type="number"
+              placeholder="Quantity"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
             />
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Product Description

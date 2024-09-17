@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 // import { selectUserId } from "../selectors/Selectors";
 const Products = () => {
   // const selectedUserId = useSelector((state) => state.reducer.selectedUserId);
   const [products, setProducts] = useState([]);
   const [username, setUsername] = useState([]);
-
+  const navigate = useNavigate();
   const UserId = useSelector((state) => state.reducer.UserId);
   // const userId = useSelector(selectUserId);
   // const userId = useSelector((state) => state.reducer.userId);
@@ -41,6 +42,7 @@ const Products = () => {
     // Validate username
     if (typeof username !== "string" || username.trim() === "") {
       alert("Username is required. Please fetch the username first.");
+      navigate("/login");
       return;
     }
 
@@ -102,6 +104,10 @@ const Products = () => {
               </h3>
               <p className="text-gray-200 mb-2">{product.description}</p>
             </div>
+            <p className="text-gray-200 font-bold">
+              Quanity left: {product.quantity}
+            </p>
+
             <p className="text-gray-200 font-bold">Price: ${product.price}</p>
             <button
               type="button"

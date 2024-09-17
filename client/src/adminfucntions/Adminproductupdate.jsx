@@ -10,6 +10,7 @@ const Adminproductupdate = () => {
     setPrice("");
     setDescription("");
     setFile(null);
+    setQuality("");
     setShowForm(false);
   };
 
@@ -41,6 +42,8 @@ const Adminproductupdate = () => {
   // const [value, setValue] = useState("Default Name");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
+  const [quantity, setQuantity] = useState("");
+
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   // const [image, setImage] = useState("");
@@ -63,6 +66,7 @@ const Adminproductupdate = () => {
         setDescription(response.data.description);
         setFile(response.data.file);
         setProduct(response.data);
+        setQuantity(response.data);
         // setImage(response.data.image);
       } catch (error) {
         setError(error.message);
@@ -83,6 +87,7 @@ const Adminproductupdate = () => {
     formData.append("price", price);
     formData.append("category", category);
     formData.append("file", file);
+    formData.append("quantity", quantity);
     try {
       const updatedProduct = {
         name,
@@ -90,6 +95,7 @@ const Adminproductupdate = () => {
         price,
         description,
         file,
+        quantity,
         // image,
       };
       const response = await axios.put(
@@ -188,6 +194,16 @@ const Adminproductupdate = () => {
               placeholder="Price"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+            />
+            <label className="block  text-sm font-medium text-gray-900 dark:text-gray-200">
+              Quantity
+            </label>
+            <input
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              type="number"
+              placeholder="Quantity"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
             />
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Product Description

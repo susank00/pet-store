@@ -92,6 +92,9 @@ const Adminproductlist = () => {
                 Price
               </th>
               <th scope="col" className="px-6 py-3">
+                quanity
+              </th>
+              <th scope="col" className="px-6 py-3">
                 modify
               </th>
             </tr>
@@ -112,7 +115,9 @@ const Adminproductlist = () => {
 
                 <td className="px-6 py-4">{product.category}</td>
                 <td className="px-6 py-4">{product.description}</td>
-                <td className="px-6 py-4">${product.price}</td>
+                <td className="px-6 py-4">Rs.{product.price}</td>
+                <td className="px-6 py-4">{product.quantity}</td>
+
                 <td className="px-6 py-4 ">
                   <button
                     onClick={() => handleEditClick(product._id)}
