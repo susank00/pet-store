@@ -544,6 +544,9 @@ app.post("/khalti-api", async (req, res) => {
 
   console.log(khaltiResponse);
 });
+app.get("/", (req, res) => {
+  res.send("Welcome to the home page!");
+});
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ending>>>>>>>>>>>>>
 // end of deleteuser func
 // end>>>>>>>>>>
