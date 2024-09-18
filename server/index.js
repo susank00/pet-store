@@ -411,6 +411,7 @@ app.post("/api/products", upload.single("file"), async (req, res) => {
 // Add endpoint for fetching products
 
 app.get("/api/products", async (req, res) => {
+  res.send("Welcome to the home page!");
   try {
     const products = await Product.find();
     res.json(products);
