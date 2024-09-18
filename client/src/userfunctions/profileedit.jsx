@@ -35,25 +35,17 @@ const Profileedit = () => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL_PROD_API_URL}/employeeNames/${UserId}`
+          `http://localhost:3001/employeeNames/${UserId}`
         );
-        console.log("API URL:", import.meta.env.VITE_API_URL_PROD_API_URL);
-
         setEmployee(response.data);
         setUsername(response.data.name);
         setEmail(response.data.email);
         setPassword(response.data.password); // Ideally, you shouldn't fetch passwords like this
         setPreviewImage(
           response.data.image
-            ? `https://mern-loginbackend.vercel.app/images/${response.data.image}`
+            ? `http://localhost:3001/images/${response.data.image}`
             : null
         );
-        console.log(
-          `${import.meta.env.VITE_API_URL_PROD_API_URL}/images/${
-            response.data.image
-          }`
-        );
-        console.log("Preview Image URL:", previewImage);
       } catch (error) {
         console.error("Error fetching profile:", error);
         navigate("/login"); // Redirect to login if there's an error
@@ -80,7 +72,7 @@ const Profileedit = () => {
     }
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL_PROD_API_URL}/employeeNames/${UserId}`,
+        `http://localhost:3001/employeeNames/${UserId}`,
         formData,
         {
           headers: {
@@ -92,9 +84,7 @@ const Profileedit = () => {
       setFile(null);
       setPreviewImage(
         response.data.image
-          ? `${import.meta.env.VITE_API_URL_PROD_API_URL}/static/images/${
-              response.data.image
-            }`
+          ? `http://localhost:3001/images/${response.data.image}`
           : null
       );
       if (response.status === 200) {
@@ -136,9 +126,7 @@ const Profileedit = () => {
                       width: "100%",
                       objectFit: "fill",
                     }}
-                    src={`${import.meta.env.VITE_API_URL_PROD_API_URL}/images/${
-                      employee.image
-                    }`}
+                    src={`http://localhost:3001/images/${employee.image}`}
                     alt="Previous Image"
                   />
                 </div>
