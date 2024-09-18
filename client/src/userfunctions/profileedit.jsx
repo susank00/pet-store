@@ -45,9 +45,7 @@ const Profileedit = () => {
         setPassword(response.data.password); // Ideally, you shouldn't fetch passwords like this
         setPreviewImage(
           response.data.image
-            ? `${import.meta.env.VITE_API_URL_PROD_API_URL}/public/images/${
-                response.data.image
-              }`
+            ? `https://mern-loginbackend.vercel.app/images/${response.data.image}`
             : null
         );
         console.log(
