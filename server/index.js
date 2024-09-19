@@ -24,9 +24,29 @@ mongoose
     console.error("Error connecting to MongoDB", err);
   });
 const secretKey = process.env.JWT_SECRET;
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
+  if (!token) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Unauthorized: No token provided" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Forbidden: Invalid token" });
+    }
+    // Attach the user information to the request object
+    req.user = user;
+    next();
+  });
+}
 // this for fetching employee namewe
-app.post("/getUserInfo", (req, res) => {
+app.post("/getUserInfo", authenticateToken, (req, res) => {
   const { email } = req.body;
   EmployeeModel.findOne({ email: email })
     .then((user) => {
@@ -60,14 +80,14 @@ app.post("/getUserInfo", (req, res) => {
 //   }
 // });
 
-app.get("/employeeNames", async (req, res) => {
+app.get("/employeeNames", authenticateToken, async (req, res) => {
   try {
     // Fetch all employee names from the database
-    const employees = await EmployeeModel.find();
+    const employees = await EmployeeModel.find({}); // Fetch only the name field if required
 
     res.json(employees);
   } catch (error) {
-    console.error("Error fetching products:", error.message);
+    console.error("Error fetching employee names:", error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
@@ -76,7 +96,7 @@ app.get("/employeeNames", async (req, res) => {
 
 // Assuming you have the EmployeeModel and secretKey already defined
 
-app.get("/profile", (req, res) => {
+app.get("/profile", authenticateToken, (req, res) => {
   // Extract the authorization header from the request
   const authHeader = req.headers["authorization"];
 
@@ -138,7 +158,7 @@ app.get("/profile", (req, res) => {
 // end of authorization and token >>>> -+963
 //  to get user name from user id
 
-app.get("/profile/:userId", (req, res) => {
+app.get("/profile/:userId", authenticateToken, (req, res) => {
   // Extract the userId from the URL parameters
   const { userId } = req.params;
 
@@ -278,7 +298,7 @@ app.post("/register", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-app.get("/names", async (req, res) => {
+app.get("/names", authenticateToken, async (req, res) => {
   try {
     // Fetch all names from the database
     const name = await EmployeeModel.find({}, "name");
