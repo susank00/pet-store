@@ -7,6 +7,7 @@ const Products = () => {
   // const selectedUserId = useSelector((state) => state.reducer.selectedUserId);
   const [products, setProducts] = useState([]);
   const [username, setUsername] = useState([]);
+  const [email, setEmail] = useState([]);
   const navigate = useNavigate();
   const UserId = useSelector((state) => state.reducer.UserId);
   // const userId = useSelector(selectUserId);
@@ -28,6 +29,7 @@ const Products = () => {
           `http://localhost:3001/profile/${UserId}`
         );
         setUsername(response.data.user.name);
+        setEmail(response.data.user.email);
         console.log(response.data.user.name);
       } catch (error) {
         console.error("Error fetching username:", error);
@@ -57,7 +59,7 @@ const Products = () => {
       purchase_order_name: product.name,
       customer_info: {
         name: username,
-        email: "example@gmail.com",
+        email: email,
         phone: "9811496763",
       },
     };

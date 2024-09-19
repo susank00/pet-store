@@ -10,15 +10,12 @@ const Adminfunction = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [employees, setEmployees] = useState([]);
-  const [userName, setUserName] = useState("");
-  const [result, setResult] = useState("");
   const [showAdminUserEdit, setShowAdminUserEdit] = useState(false);
-
-  // Retrieve access token
-  const getAccessToken = localStorage.getItem("accessToken");
 
   // Check for token and fetch employees
   useEffect(() => {
+    const getAccessToken = localStorage.getItem("accessToken");
+
     if (!getAccessToken) {
       navigate("/login"); // Redirect to login if token is not found
       return;
@@ -32,7 +29,7 @@ const Adminfunction = () => {
             headers: {
               Authorization: `Bearer ${getAccessToken}`,
             },
-            timeout: 10000,
+            timeout: 1000,
           }
         );
         setEmployees(response.data);
@@ -46,7 +43,7 @@ const Adminfunction = () => {
     };
 
     fetchEmployees();
-  }, [getAccessToken, navigate, employees, showAdminUserEdit]);
+  }, [navigate, showAdminUserEdit]); // Removed 'employees' from dependency array
 
   // Handle edit click
   const handleEditClick = (employeeId) => {
@@ -54,24 +51,6 @@ const Adminfunction = () => {
     dispatch(setSelectedEmployeesId(employeeId));
     setShowAdminUserEdit(true);
   };
-
-  // Handle delete user
-  // const deleteUser = async () => {
-  //   try {
-  //     const response = await axios.delete(
-  //       `http://localhost:3001/api/employees/delete/${userName}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${getAccessToken}`,
-  //         },
-  //       }
-  //     );
-  //     setResult(response.data.message);
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //     setResult("An error occurred while processing your request.");
-  //   }
-  // };
 
   return (
     <>
