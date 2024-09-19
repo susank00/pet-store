@@ -31,7 +31,7 @@ const MyNavbar = () => {
       if (token) {
         try {
           const response = await axios.get(
-            "${import.meta.env.VITE_API_URL_PROD_API_URL}/profile",
+            `${import.meta.env.VITE_API_URL_PROD_API_URL}/profile`,
             {
               timeout: 10000,
               headers: {

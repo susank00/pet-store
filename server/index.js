@@ -23,10 +23,7 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to MongoDB", err);
   });
-const generateRandomKey = () => {
-  return crypto.randomBytes(32).toString("hex");
-};
-const secretKey = generateRandomKey();
+const secretKey = process.env.JWT_SECRET;
 
 // this for fetching employee namewe
 app.post("/getUserInfo", (req, res) => {
