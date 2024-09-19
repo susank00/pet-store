@@ -30,12 +30,15 @@ const MyNavbar = () => {
     const getProfile = async () => {
       if (token) {
         try {
-          const response = await axios.get("http://localhost:3001/profile", {
-            timeout: 10000,
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.get(
+            "${import.meta.env.VITE_API_URL_PROD_API_URL}/profile",
+            {
+              timeout: 10000,
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
           const { success, user } = response.data;
 
@@ -63,7 +66,9 @@ const MyNavbar = () => {
       if (UserId) {
         try {
           const response = await axios.get(
-            `http://localhost:3001/employeeNames/${UserId}`
+            `${
+              import.meta.env.VITE_API_URL_PROD_API_URL
+            }/employeeNames/${UserId}`
           );
           setEmployees(response.data);
         } catch (error) {
@@ -173,7 +178,9 @@ const MyNavbar = () => {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={`http://localhost:3001/public/images/${employees?.image}`}
+                        src={`${
+                          import.meta.env.VITE_API_URL_PROD_API_URL
+                        }/public/images/${employees?.image}`}
                         alt=""
                       />
                     </Menu.Button>
