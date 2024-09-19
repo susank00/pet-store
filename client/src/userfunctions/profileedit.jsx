@@ -35,7 +35,7 @@ const Profileedit = () => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL_PROD_API_URL}/employeeNames/${UserId}`
+          `http://localhost:3001/employeeNames/${UserId}`
         );
         setEmployee(response.data);
         setUsername(response.data.name);
@@ -43,9 +43,7 @@ const Profileedit = () => {
         setPassword(response.data.password); // Ideally, you shouldn't fetch passwords like this
         setPreviewImage(
           response.data.image
-            ? `${import.meta.env.VITE_API_URL_PROD_API_URL}/images/${
-                response.data.image
-              }`
+            ? `http://localhost:3001/public/images/${response.data.image}`
             : null
         );
       } catch (error) {
@@ -74,7 +72,7 @@ const Profileedit = () => {
     }
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL_PROD_API_URL}/${UserId}`,
+        `http://localhost:3001/employeeNames/${UserId}`,
         formData,
         {
           headers: {
@@ -86,9 +84,7 @@ const Profileedit = () => {
       setFile(null);
       setPreviewImage(
         response.data.image
-          ? `${import.meta.env.VITE_API_URL_PROD_API_URL}/images/${
-              response.data.image
-            }`
+          ? `http://localhost:3001/public/images/${response.data.image}`
           : null
       );
       if (response.status === 200) {
@@ -130,9 +126,7 @@ const Profileedit = () => {
                       width: "100%",
                       objectFit: "fill",
                     }}
-                    src={`${import.meta.env.VITE_API_URL_PROD_API_URL}/images/${
-                      employee.image
-                    }`}
+                    src={`http://localhost:3001/public/images/${employee.image}`}
                     alt="Previous Image"
                   />
                 </div>

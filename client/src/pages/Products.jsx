@@ -95,7 +95,7 @@ const Products = () => {
                     width: "100%",
                     objectFit: "fill",
                   }}
-                  src={`http://localhost:3001/images/${product.image}`}
+                  src={`http://localhost:3001/public/images/${product.image}`}
                   alt=""
                 />
               </div>

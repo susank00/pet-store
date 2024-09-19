@@ -173,7 +173,7 @@ const MyNavbar = () => {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={`http://localhost:3001/images/${employees?.image}`}
+                        src={`http://localhost:3001/public/images/${employees?.image}`}
                         alt=""
                       />
                     </Menu.Button>
