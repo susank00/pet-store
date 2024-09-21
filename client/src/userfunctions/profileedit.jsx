@@ -13,7 +13,7 @@ const Profileedit = () => {
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [employee, setEmployee] = useState(null);
-
+  const token = localStorage.getItem("accessToken");
   const UserId = useSelector((state) => state.reducer.UserId); // Get UserId from Redux store
   const navigate = useNavigate(); // Navigation hook
 

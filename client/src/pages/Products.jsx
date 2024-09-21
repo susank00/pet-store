@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 // import { selectUserId } from "../selectors/Selectors";
 const Products = () => {
   // const selectedUserId = useSelector((state) => state.reducer.selectedUserId);
@@ -9,12 +10,22 @@ const Products = () => {
   const [username, setUsername] = useState([]);
   const [email, setEmail] = useState([]);
   const navigate = useNavigate();
-  const UserId = useSelector((state) => state.reducer.UserId);
+  const [UserId, setUserId] = useState(null);
+  // const UserId = useSelector((state) => state.reducer.UserId);
+
   // const userId = useSelector(selectUserId);
   // const userId = useSelector((state) => state.reducer.userId);
   console.log("Selected User ID from Redux store:", UserId);
 
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log("Decoded token:", decodedToken);
+      setUserId(decodedToken.userId);
+      setUsername(decodedToken.username);
+      setEmail(decodedToken.email); // Assuming userId is in the token
+    }
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://localhost:3001/api/products");
@@ -23,19 +34,19 @@ const Products = () => {
         console.error("Error fetching products:", error);
       }
     };
-    const fetchUsername = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3001/profile/${UserId}`
-        );
-        setUsername(response.data.user.name);
-        setEmail(response.data.user.email);
-        console.log(response.data.user.name);
-      } catch (error) {
-        console.error("Error fetching username:", error);
-      }
-    };
-    fetchUsername();
+    // const fetchUsername = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `http://localhost:3001/profile/${UserId}`
+    //     );
+    //     setUsername(response.data.user.name);
+    //     setEmail(response.data.user.email);
+    //     console.log("the response from profile", response.data.user.name);
+    //   } catch (error) {
+    //     console.error("Error fetching username:", error);
+    //   }
+    // };
+    // fetchUsername();
     fetchProducts();
   }, []);
   const handleBuy = async (product) => {

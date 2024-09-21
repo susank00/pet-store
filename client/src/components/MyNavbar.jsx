@@ -2,29 +2,36 @@ import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-
-import "/index.css";
-import { persistor } from "../redux/store";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import "/index.css";
 
 const MyNavbar = () => {
   const navigation = [
     { name: "Dashboard", href: "/", current: true },
     { name: "Profile", href: "/profile", current: false },
     { name: "Products", href: "/products", current: false },
+    { name: "How_to_operate", href: "/howto", current: false },
   ];
 
-  const [isloggedin, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState(null);
   const [employees, setEmployees] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const navigate = useNavigate();
   const token = localStorage.getItem("accessToken");
 
-  const UserId = useSelector((state) => state.reducer.UserId);
-
-  console.log("Selected User ID from Redux store:", UserId);
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserId(decodedToken.userId);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, [token]);
 
   useEffect(() => {
     const getProfile = async () => {
@@ -33,7 +40,6 @@ const MyNavbar = () => {
           const response = await axios.get(
             `${import.meta.env.VITE_API_URL_PROD_API_URL}/profile`,
             {
-              timeout: 10000,
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -47,11 +53,11 @@ const MyNavbar = () => {
             setIsLoggedIn(true);
           } else {
             console.log("Error fetching user profile:", response.data.message);
-            onLogout();
+            onLogout(true); // Call onLogout with session expired flag
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
-          onLogout();
+          onLogout(true); // Call onLogout with session expired flag
         }
       }
     };
@@ -63,12 +69,12 @@ const MyNavbar = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (UserId) {
+      if (userId) {
         try {
           const response = await axios.get(
             `${
               import.meta.env.VITE_API_URL_PROD_API_URL
-            }/employeeNames/${UserId}`
+            }/employeeNames/${userId}`
           );
           setEmployees(response.data);
         } catch (error) {
@@ -78,16 +84,19 @@ const MyNavbar = () => {
     };
 
     fetchProfile();
-  }, [UserId, setEmployees]);
+  }, [userId]);
 
-  const onLogout = async () => {
+  const onLogout = async (isSessionExpired = false) => {
     localStorage.removeItem("accessToken");
     setUserName(null);
     setIsLoggedIn(false);
     setEmployees(null);
-    await persistor.purge();
-    alert("You are being logged out due to inactive session.");
-    navigate("/");
+
+    if (isSessionExpired) {
+      alert("You are being logged out due to inactive session.");
+    }
+
+    navigate("/"); // Redirect to the home page
   };
 
   const onLogin = () => {
@@ -105,7 +114,6 @@ const MyNavbar = () => {
           <div className="mx-auto max-w-10xl px- sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between z-10">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                {/* Mobile menu button */}
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
@@ -147,8 +155,8 @@ const MyNavbar = () => {
                 </div>
               </div>
               <div className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500">
-                {isloggedin ? (
-                  <button className="text-white" onClick={onLogout}>
+                {isLoggedIn ? (
+                  <button className="text-white" onClick={() => onLogout()}>
                     Logout
                   </button>
                 ) : (
@@ -170,20 +178,21 @@ const MyNavbar = () => {
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
 
-                {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src={`${
-                          import.meta.env.VITE_API_URL_PROD_API_URL
-                        }/public/images/${employees?.image}`}
-                        alt=""
-                      />
-                    </Menu.Button>
+                    {isLoggedIn && employees?.image ? (
+                      <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                        <span className="absolute -inset-1.5" />
+                        <span className="sr-only">Open user menu</span>
+                        <img
+                          className="h-8 w-8 rounded-full"
+                          src={`${
+                            import.meta.env.VITE_API_URL_PROD_API_URL
+                          }/public/images/${employees?.image}`}
+                          alt=""
+                        />
+                      </Menu.Button>
+                    ) : null}
                   </div>
                   <Transition
                     as={Fragment}
