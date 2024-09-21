@@ -57,7 +57,9 @@ const Adminproductupdate = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/products/${selectedProductId}`
+          `${
+            import.meta.env.VITE_API_URL_PROD_API_URL
+          }/api/products/${selectedProductId}`
         );
         setProduct(response.data);
         setName(response.data.name);
@@ -99,7 +101,9 @@ const Adminproductupdate = () => {
         // image,
       };
       const response = await axios.put(
-        `http://localhost:3001/api/products/${selectedProductId}`,
+        `${
+          import.meta.env.VITE_API_URL_PROD_API_URL
+        }/api/products/${selectedProductId}`,
         formData,
         updatedProduct,
         {
@@ -236,7 +240,9 @@ const Adminproductupdate = () => {
                     width: "100%",
                     objectFit: "fill",
                   }}
-                  src={`http://localhost:3001/images/${product.image}`}
+                  src={`${import.meta.env.VITE_API_URL_PROD_API_URL}/images/${
+                    product.image
+                  }`}
                   alt="Previous Image"
                 />
               </div>
@@ -262,7 +268,7 @@ const Adminproductupdate = () => {
               width: "100%",
               objectFit: "fill",
             }}
-            src={`http://localhost:3001/images/${product.image}`}
+            src={`${import.meta.env.VITE_API_URL_PROD_API_URL}/images/${product.image}`}
             alt=""
           />
         </div> */}

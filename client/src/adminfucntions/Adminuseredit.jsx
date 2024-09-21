@@ -25,7 +25,9 @@ const AdminUserEdit = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:3001/employeeNames/${selectedEmployeesId}`
+          `${
+            import.meta.env.VITE_API_URL_PROD_API_URL
+          }/employeeNames/${selectedEmployeesId}`
         );
         setName(response.data.name);
         setEmail(response.data.email);
@@ -61,7 +63,9 @@ const AdminUserEdit = () => {
     setIsLoading(true);
     try {
       const response = await axios.put(
-        `http://localhost:3001/employeeNames/${selectedEmployeesId}`,
+        `${
+          import.meta.env.VITE_API_URL_PROD_API_URL
+        }/employeeNames/${selectedEmployeesId}`,
         {
           name,
           email,

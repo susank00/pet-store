@@ -24,7 +24,7 @@ const Adminfunction = () => {
     const fetchEmployees = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/employeeNames",
+          `${import.meta.env.VITE_API_URL_PROD_API_URL}/employeeNames`,
           {
             headers: {
               Authorization: `Bearer ${getAccessToken}`,

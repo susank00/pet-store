@@ -28,7 +28,9 @@ const Products = () => {
     }
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/products");
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/products`
+        );
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -37,7 +39,7 @@ const Products = () => {
     // const fetchUsername = async () => {
     //   try {
     //     const response = await axios.get(
-    //       `http://localhost:3001/profile/${UserId}`
+    //       `${import.meta.env.VITE_API_URL_PROD_API_URL}/profile/${UserId}`
     //     );
     //     setUsername(response.data.user.name);
     //     setEmail(response.data.user.email);
@@ -77,7 +79,7 @@ const Products = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3001/khalti-api`,
+        `${import.meta.env.VITE_API_URL_PROD_API_URL}/khalti-api`,
         payload
       );
       console.log(response);
@@ -108,7 +110,9 @@ const Products = () => {
                     width: "100%",
                     objectFit: "fill",
                   }}
-                  src={`http://localhost:3001/public/images/${product.image}`}
+                  src={`${
+                    import.meta.env.VITE_API_URL_PROD_API_URL
+                  }/public/images/${product.image}`}
                   alt=""
                 />
               </div>

@@ -37,12 +37,15 @@ const Adminproductlist = () => {
     }
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/products", {
-          headers: {
-            Authorization: `Bearer ${getAccessToken}`,
-          },
-          timeout: 10000,
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/products`,
+          {
+            headers: {
+              Authorization: `Bearer ${getAccessToken}`,
+            },
+            timeout: 10000,
+          }
+        );
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);

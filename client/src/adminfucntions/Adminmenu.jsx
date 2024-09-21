@@ -14,7 +14,9 @@ const Adminproductlist = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/products");
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/products`
+        );
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);

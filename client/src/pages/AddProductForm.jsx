@@ -33,7 +33,10 @@ const AddProductForm = () => {
     formData.append("quantity", quantity);
 
     axios
-      .post("http://localhost:3001/api/products", formData)
+      .post(
+        `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/products`,
+        formData
+      )
       .then((res) => {
         console.log("Product added:", res.data.product);
         // console.log(setImage(res.data[0].image));

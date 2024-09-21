@@ -14,12 +14,15 @@ const SideNavbar = () => {
   const getProfile = async () => {
     const getAccessToken = localStorage.getItem("accessToken");
     try {
-      const response = await axios.get("http://localhost:3001/profile", {
-        timeout: 10000,
-        headers: {
-          Authorization: `Bearer ${getAccessToken}`,
-        },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL_PROD_API_URL}/profile`,
+        {
+          timeout: 10000,
+          headers: {
+            Authorization: `Bearer ${getAccessToken}`,
+          },
+        }
+      );
       setName(response.data.user.name);
       setRole(response.data.user.role);
       // setLoading(false);
