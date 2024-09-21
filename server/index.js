@@ -45,6 +45,24 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
+
+//  secure way to get the images
+// app.get("/public/images/:filename", authenticateToken, (req, res) => {
+//   const filename = req.params.filename;
+//   const filePath = path.join(__dirname, "public", "images", filename);
+
+//   res.sendFile(filePath, (err) => {
+//     if (err) {
+//       console.error("Error sending file:", err);
+//       res.status(500).json({
+//         success: false,
+//         message: "Internal server error",
+//       });
+//     }
+//   });
+// });
+// end of secure way to get the images
+
 // this for fetching employee namewe
 app.post("/getUserInfo", authenticateToken, (req, res) => {
   const { email } = req.body;
@@ -124,6 +142,7 @@ app.get("/profile", authenticateToken, (req, res) => {
     const userId = decoded.userId; // Assuming userId is included in the token
     const username = decoded.name;
     const role = decoded.role;
+    const email = decoded.email;
     // Fetch user profile from your database
     EmployeeModel.findById(userId)
       .then((user) => {
@@ -215,7 +234,7 @@ app.post("/login", async (req, res) => {
         const accessToken = jwt.sign(
           { userId: user._id, email: user.email, username: user.name },
           secretKey,
-          { expiresIn: "100m" } // Short-lived access token
+          { expiresIn: "600s" } // Short-lived access token
         );
         console.log(accessToken);
         // Generate a new refresh token with a longer expiration time
