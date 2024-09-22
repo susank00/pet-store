@@ -21,7 +21,9 @@ const PurchaseHistory = () => {
     const fetchPurchaseHistory = async (userId) => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/purchasehistory/${userId}`
+          `${
+            import.meta.env.VITE_API_URL_PROD_API_URL
+          }/api/purchasehistory/${userId}`
         );
         setPurchaseHistory(response.data);
         setLoading(false);

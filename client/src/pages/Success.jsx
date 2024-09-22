@@ -36,7 +36,7 @@ const SuccessPage = () => {
     const verifyPayment = async (pidx) => {
       try {
         const response = await axios.post(
-          "http://localhost:3001/api/verify-payment",
+          `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/verify-payment`,
           { pidx: paymentDetails.pidx }
         );
         console.log(response.data.status);
@@ -47,13 +47,13 @@ const SuccessPage = () => {
             userId: UserId, // You can adjust this based on your requirements
             productId: paymentDetails.purchase_order_id,
             productName: paymentDetails.purchase_order_name,
-            price: paymentDetails.amount, // Assuming amount is in paisa
+            price: paymentDetails.amount / 100, // Assuming amount is in paisa
             category: "General", // Adjust category as needed
           };
 
           // Post the purchase details to the API
           const productResponse = await axios.post(
-            "http://localhost:3001/api/purchasehistory",
+            `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/purchasehistory`,
             productData
           );
           console.log("Product successfully added:", productResponse.data);
@@ -64,7 +64,7 @@ const SuccessPage = () => {
             {
               pidx: paymentDetails.pidx,
               transactionId: paymentDetails.transaction_id,
-              amount: paymentDetails.amount / 100,
+              amount: parseInt(paymentDetails.amount) / 100,
               mobile: paymentDetails.mobile,
               productid: paymentDetails.purchase_order_id,
               date: new Date(),
@@ -113,8 +113,8 @@ const SuccessPage = () => {
             purchaseHistory.map((purchase, index) => (
               <li key={index} className="text-lg">
                 Transaction ID: {purchase.transactionId}, pidx: {purchase.pidx},
-                Amount: {purchase.amount / 100} Rs, Mobile: {purchase.mobile},
-                product_id: {purchase.productid}, Date:{" "}
+                Amount: {parseInt(purchase.amount) / 100} Rs, Mobile:{" "}
+                {purchase.mobile}, product_id: {purchase.productid}, Date:{" "}
                 {purchase.date.toString()}
               </li>
             ))

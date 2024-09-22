@@ -32,6 +32,7 @@ const Products = () => {
           `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/products`
         );
         setProducts(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -64,11 +65,11 @@ const Products = () => {
     console.log("Username:", username);
 
     const payload = {
-      return_url: "http://localhost:5173/success",
-      // return_url: `http://localhost:5173/success?userId=${UserId}&productId=${
+      return_url: "https://pet-store-eight.vercel.app/success",
+      // return_url: `${import.meta.env.VITE_API_URL_CLIENT_PROD_API_URL}/success?userId=${UserId}&productId=${
       //   product._id
       // }&productName=${product.name}&amount=${parseInt(product.price) * 100}`,
-      website_url: "http://localhost:5173",
+      website_url: "https://pet-store-eight.vercel.app",
       featureFlag: process.env.REACT_APP_FEATURE_FLAG,
       amount: parseInt(product.price) * 100,
       purchase_order_id: product._id,
