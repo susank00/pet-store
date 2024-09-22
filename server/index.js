@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const EmployeeModel = require("./models/Employee");
+const PurchaseHistory = require("./models/purchaseHistoryy");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const multer = require("multer");
@@ -581,8 +582,131 @@ app.post("/khalti-api", async (req, res) => {
 
   console.log(khaltiResponse);
 });
+app.post("/register", async (req, res) => {
+  const { name, email, password, role = "user" } = req.body;
+  const existingUser = await EmployeeModel.findOne({ email });
+
+  if (!email && !password) {
+    return res.json({
+      success: false,
+      message: "Please enter email and password",
+    });
+  } else if (!name) {
+    return res.json({
+      success: false,
+      message: "Please enter Name",
+    });
+  } else if (!email) {
+    return res.json({
+      success: false,
+      message: "Please enter email address",
+    });
+  } else if (!password) {
+    return res.json({
+      success: false,
+      message: "Please enter password",
+    });
+  }
+  if (existingUser) {
+    return res.json({
+      success: false,
+      message: "email already exist please use a different email",
+    });
+  }
+  try {
+    // Create a new user with assigned role
+    const newUser = await EmployeeModel.create({
+      name,
+      email,
+      password,
+      role,
+    });
+
+    // Respond with the created user data
+    res.json({
+      success: true,
+      message: "User registered successfully",
+      user: newUser,
+    });
+  } catch (error) {
+    console.error("Error during registration:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
 app.get("/", (req, res) => {
   res.send("Welcome to the home page!");
+});
+
+app.post("/api/purchasehistory", async (req, res) => {
+  const { userId, productId, productName, price, category } = req.body;
+
+  // Validate required fields
+  // if (!userId || !productId || !productname || !price || !category) {
+  //   return res.status(400).json({ message: "All fields are required." });
+  // }
+
+  try {
+    const newPurchase = new PurchaseHistory({
+      userId,
+      productId,
+      productName,
+      price,
+      category,
+    });
+
+    // Save the product to the database
+    await newPurchase.save();
+
+    res.status(201).json({
+      message: "Product created successfully.",
+      purchase: newPurchase,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error creating product hisotry.",
+      error: error.message,
+    });
+  }
+});
+
+// GET API to fetch all products
+app.route("/api/purchasehistory/:userId").get(async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const purchasehist = await PurchaseHistory.find({ userId });
+    if (!purchasehist) {
+      return res.status(404).json({ message: "purchase history not found" });
+    }
+    res.status(200).json(purchasehist);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching products.", error: error.message });
+  }
+});
+app.post("/api/verify-payment", async (req, res) => {
+  const { pidx } = req.body;
+  const authkeyy = process.env.KHALTI_SECRET_KEY;
+  try {
+    // Verify payment with Khalti
+    const response = await axios.post(
+      "https://a.khalti.com/api/v2/epayment/lookup/",
+      { pidx },
+      {
+        headers: {
+          Authorization: `Key ${authkeyy}`, // Replace with your actual secret key
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Respond with the payment status
+    console.log(response.data.status);
+    return res.status(200).json({ status: response.data.status });
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 });
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ending>>>>>>>>>>>>>
 // end of deleteuser func
