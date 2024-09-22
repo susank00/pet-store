@@ -16,6 +16,8 @@ import Adminproductlist from "./adminfucntions/Adminproductlist";
 import Adminproductupdate from "./adminfucntions/Adminproductupdate";
 import Profileedit from "./userfunctions/profileedit";
 import Success from "./pages/Success";
+import Howto from "./pages/How_to";
+import PurchaseHistory from "./userfunctions/purchasehistory";
 const App = () => {
   return (
     <>
@@ -38,6 +40,8 @@ const App = () => {
           <Route path="/adminproductupdate" element={<Adminproductupdate />} />
           <Route path="/profileedit" element={<Profileedit />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/howto" element={<Howto />} />
+          <Route path="/purchasehistory" element={<PurchaseHistory />} />
         </Routes>
       </BrowserRouter>
     </>

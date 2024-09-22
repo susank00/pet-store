@@ -65,11 +65,15 @@ const Products = () => {
 
     const payload = {
       return_url: "http://localhost:5173/success",
+      // return_url: `http://localhost:5173/success?userId=${UserId}&productId=${
+      //   product._id
+      // }&productName=${product.name}&amount=${parseInt(product.price) * 100}`,
       website_url: "http://localhost:5173",
       featureFlag: process.env.REACT_APP_FEATURE_FLAG,
       amount: parseInt(product.price) * 100,
       purchase_order_id: product._id,
       purchase_order_name: product.name,
+      userId: UserId,
       customer_info: {
         name: username,
         email: email,

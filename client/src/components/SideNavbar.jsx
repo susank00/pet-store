@@ -26,7 +26,7 @@ const SideNavbar = () => {
       setName(response.data.user.name);
       setRole(response.data.user.role);
       // setLoading(false);
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       if (error.response) {
         alert(error.response.data.errors[0].message);
@@ -121,7 +121,7 @@ const SideNavbar = () => {
             </li>
             <li>
               <a
-                href="/profileedit"
+                href="/purchasehistory"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
