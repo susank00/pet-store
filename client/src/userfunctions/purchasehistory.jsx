@@ -60,9 +60,11 @@ const PurchaseHistory = () => {
             <tr>
               <th className="py-2 px-4 border">User ID</th>
               <th className="py-2 px-4 border">Product ID</th>
+              <th className="py-2 px-4 border">TransactionID</th>
+
               <th className="py-2 px-4 border">Product Name</th>
               <th className="py-2 px-4 border">Price</th>
-              <th className="py-2 px-4 border">Category</th>
+              <th className="py-2 px-4 border">Status</th>
               <th className="py-2 px-4 border">Date</th>
             </tr>
           </thead>
@@ -75,12 +77,12 @@ const PurchaseHistory = () => {
                 >
                   <td className="py-2 px-4 border">{purchase.userId}</td>
                   <td className="py-2 px-4 border">{purchase.productId}</td>
+                  <td className="py-2 px-4 border">{purchase.transactionId}</td>
+
                   <td className="py-2 px-4 border">{purchase.productName}</td>
                   <td className="py-2 px-4 border">{purchase.price} Rs</td>
-                  <td className="py-2 px-4 border">{purchase.category}</td>
-                  <td className="py-2 px-4 border">
-                    {new Date(purchase.createdAt).toLocaleDateString()}
-                  </td>
+                  <td className="py-2 px-4 border">{purchase.status}</td>
+                  <td className="py-2 px-4 border">{purchase.purchaseDate}</td>
                 </tr>
               ))
             ) : (

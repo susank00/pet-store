@@ -5,8 +5,8 @@ import { jwtDecode } from "jwt-decode";
 
 const SuccessPage = () => {
   const [purchaseHistory, setPurchaseHistory] = useState([]);
-  const location = useLocation();
   const [UserId, setUserId] = useState(null);
+  const location = useLocation();
 
   // Helper function to parse URL query parameters
   const getQueryParams = () => {
@@ -22,43 +22,46 @@ const SuccessPage = () => {
     };
   };
 
+  // Fetch User ID from token
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       const decodedToken = jwtDecode(token);
-      console.log("Decoded token:", decodedToken);
       setUserId(decodedToken.userId);
-      console.log("User Id:", decodedToken.userId);
-      console.log("thew userid is", decodedToken.userId);
     }
+  }, []);
+
+  // Verify payment once UserId is set and payment status is completed
+  useEffect(() => {
     const paymentDetails = getQueryParams();
 
-    const verifyPayment = async (pidx) => {
+    const verifyPayment = async () => {
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/verify-payment`,
           { pidx: paymentDetails.pidx }
         );
-        console.log(response.data.status);
-        // Check the payment status
+
         if (response.data.status === "Completed") {
-          // Prepare the product data for posting
+          const purchaseTimestamp = Date.now(); // Get current timestamp
+
           const productData = {
-            userId: UserId, // You can adjust this based on your requirements
+            userId: UserId,
             productId: paymentDetails.purchase_order_id,
             productName: paymentDetails.purchase_order_name,
+            status: paymentDetails.status,
             price: paymentDetails.amount / 100, // Assuming amount is in paisa
-            category: "General", // Adjust category as needed
+            category: "General",
+            purchaseDate: new Date().toLocaleString(), // Store timestamp
+            transactionId: paymentDetails.transaction_id,
           };
 
-          // Post the purchase details to the API
-          const productResponse = await axios.post(
+          await axios.post(
             `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/purchasehistory`,
             productData
           );
-          console.log("Product successfully added:", productResponse.data);
 
-          // Update the purchase history with the new transaction
+          // Update purchase history with timestamp
           setPurchaseHistory((prevHistory) => [
             ...prevHistory,
             {
@@ -67,7 +70,7 @@ const SuccessPage = () => {
               amount: parseInt(paymentDetails.amount) / 100,
               mobile: paymentDetails.mobile,
               productid: paymentDetails.purchase_order_id,
-              date: new Date(),
+              date: purchaseTimestamp, // Store timestamp
             },
           ]);
         } else {
@@ -81,11 +84,11 @@ const SuccessPage = () => {
       }
     };
 
-    // Check the payment status
-    if (paymentDetails.status === "Completed") {
-      verifyPayment(paymentDetails.pidx);
+    // Only verify payment if UserId is set and payment status is completed
+    if (UserId && paymentDetails.status === "Completed") {
+      verifyPayment();
     }
-  }, [location.search, UserId]); // Ensure this effect runs when the URL changes
+  }, [UserId, location.search]); // Ensure this effect runs when UserId or URL changes
 
   return (
     <div className="container mx-auto mt-8">
@@ -113,9 +116,10 @@ const SuccessPage = () => {
             purchaseHistory.map((purchase, index) => (
               <li key={index} className="text-lg">
                 Transaction ID: {purchase.transactionId}, pidx: {purchase.pidx},
-                Amount: {parseInt(purchase.amount) / 100} Rs, Mobile:{" "}
+                Amount: {parseInt(purchase.amount) / 10} Rs, Mobile:{" "}
                 {purchase.mobile}, product_id: {purchase.productid}, Date:{" "}
-                {purchase.date.toString()}
+                {new Date(purchase.date).toLocaleString()}{" "}
+                {/* Convert timestamp to readable date */}
               </li>
             ))
           ) : (
