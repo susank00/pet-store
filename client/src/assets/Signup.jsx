@@ -39,63 +39,69 @@ const Signup = () => {
   return (
     <>
       {/* <MyNavbar /> */}
-      <br /> <br /> <br />
-      <form
-        className="max-w-sm mx-auto p-8 rounded border border-gray-300 bg-red-300 dark:ring-gray-500"
-        onSubmit={handleSubmit}
-      >
-        <h1 className="text-2xl font-bold mb-4">Register Here</h1>
-        <div className="mb-4">
-          <label className="block mb-2 text-sm  text-gray-900 dark:text-black font-bold ">
-            NAME:
-            <br />
-            <input
-              className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-              type="text"
-              name="name"
-              placeholder="Enter name"
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
+      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600 animate-gradient">
+        <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-xl shadow-lg">
+          <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-6">
+            Register Here
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter name"
+                onChange={(e) => setName(e.target.value)}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter email"
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
+            >
+              Register
+            </button>
+            <p className="mt-6 text-center text-sm text-gray-600">
+              Already registered?{" "}
+              <Link
+                to="/login"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
+                Login here
+              </Link>
+            </p>
+          </form>
         </div>
-        <div className="mb-4">
-          <label className="block mb-2 text-sm font-bold text-gray-900 dark:text-black">
-            EMAIL:
-            <br />
-            <input
-              className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-              type="email"
-              name="email"
-              placeholder="Enter email"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-bold text-gray-900 dark:text-black">
-            PASSWORD:
-            <br />
-            <input
-              className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-              type="password"
-              name="password"
-              placeholder="Enter password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-        </div>
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Register
-        </button>
-        <br />
-        Already registered!!
-        <label className="block mb-2 text-sm font-bold text-gray-900 dark:text-black">
-          <Link to="/login">Login here</Link>
-        </label>
-      </form>
+      </div>
     </>
   );
 };

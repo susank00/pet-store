@@ -75,12 +75,12 @@ const SideNavbar = () => {
 
       <aside
         id="default-sidebar"
-        className="fixed  left-0 inset-y-0 z-0 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 dark:bg-gray-800"
+        className="fixed  left-0 inset-y-0 z-0 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 dark:bg-gray-900"
         //   className="absolute max-h-123 overflow-hidden w-64 transition-transform bg-gray-50 dark:bg-gray-800 transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar"
       >
         {/* <div className="h-full flex flex-col justify-between"> */}
-        <div className="h-full mt-5 px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+        <div className="h-full mt-5 px-3 py-4 overflow-y-auto bg-gray-900 dark:bg-gray-900">
           <ul className="space-y-2 font-medium">
             <li>
               <a
