@@ -13,6 +13,7 @@ const axios = require("axios");
 require("dotenv").config();
 const app = express();
 app.use(express.json());
+
 app.use(cors());
 // app.use(express.static("public"));
 app.use("/public", express.static(path.join(__dirname, "public")));
@@ -529,7 +530,7 @@ app.route("/employeeNames/:id").get(async (req, res) => {
 });
 app.route("/employeeNames/:id").put(upload.single("file"), async (req, res) => {
   const { id } = req.params;
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, image } = req.body;
 
   try {
     // Find and update the employee
@@ -540,7 +541,7 @@ app.route("/employeeNames/:id").put(upload.single("file"), async (req, res) => {
         email,
         password,
         role,
-        image: req.file ? req.file.filename : undefined, // Update image filename if file exists
+        image, // Update image filename if file exists
       },
       { new: true, runValidators: true } // Return the updated document and ensure validation
     );
@@ -723,6 +724,7 @@ app.post("/api/verify-payment", async (req, res) => {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ending>>>>>>>>>>>>>
 // end of deleteuser func
 // end>>>>>>>>>>
+
 app.listen(3001, () => {
   console.log("server is ruuninng");
 });

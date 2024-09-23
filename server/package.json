@@ -17,6 +17,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "firebase": "^10.13.2",
+    "gridfs-stream": "^1.1.1",
     "jsonwebtoken": "^9.0.2",
     "lru-cache": "^11.0.1",
     "mongodb": "^6.9.0",
