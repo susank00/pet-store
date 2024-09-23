@@ -41,8 +41,8 @@ const Products = () => {
     }
 
     const payload = {
-      return_url: "http://localhost:5173/success",
-      website_url: "http://localhost:5173",
+      return_url: "https://pet-store-eight.vercel.app/success",
+      website_url: "https://pet-store-eight.vercel.app",
       amount: parseInt(product.price) * 100,
       purchase_order_id: product._id,
       purchase_order_name: product.name,

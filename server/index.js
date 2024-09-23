@@ -638,7 +638,16 @@ app.get("/", (req, res) => {
 });
 
 app.post("/api/purchasehistory", async (req, res) => {
-  const { userId, productId, productName, price, category } = req.body;
+  const {
+    userId,
+    productId,
+    productName,
+    price,
+    category,
+    purchaseDate,
+    status,
+    transactionId,
+  } = req.body;
 
   // Validate required fields
   // if (!userId || !productId || !productname || !price || !category) {
@@ -652,6 +661,9 @@ app.post("/api/purchasehistory", async (req, res) => {
       productName,
       price,
       category,
+      purchaseDate,
+      status,
+      transactionId,
     });
 
     // Save the product to the database

@@ -17,20 +17,24 @@ const PurchaseHistorySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  // purchaseDate: {
-  //   type: Date,
-  //   default: Date.now,
-  // },
+  purchaseDate: {
+    type: String,
+    required: true,
+  },
+  transactionId: {
+    type: String,
+    required: true,
+  },
   // paymentMethod: {
   //   type: String,
   //   enum: ["esewa", "khalti"],
   //   required: true,
   // },
-  // status: {
-  //   type: String,
-  //   enum: ["pending", "completed", "refunded"],
-  //   default: "pending",
-  // },
+  status: {
+    type: String,
+
+    required: true,
+  },
 });
 
 // Create the model
