@@ -18,6 +18,7 @@ import Profileedit from "./userfunctions/profileedit";
 import Success from "./pages/Success";
 import Howto from "./pages/How_to";
 import PurchaseHistory from "./userfunctions/purchasehistory";
+import Imageupload from "./userfunctions/Imageupload";
 const App = () => {
   return (
     <>
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="/success" element={<Success />} />
           <Route path="/howto" element={<Howto />} />
           <Route path="/purchasehistory" element={<PurchaseHistory />} />
+          <Route path="/uploadfile" element={<Imageupload />} />
         </Routes>
       </BrowserRouter>
     </>

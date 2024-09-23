@@ -1,0 +1,32 @@
+${import.meta.env.VITE_API_URL_PROD_API_URL}
+
+
+
+${import.meta.env.VITE_API_URL_CLIENT_PROD_API_URL}
+
+https://pet-store-eight.vercel.app
+
+http://localhost:5173
+
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBg-fmYQ5jmlcHgxi4ZPpW9_egZGzXt0qE",
+  authDomain: "petstore-1e64d.firebaseapp.com",
+  projectId: "petstore-1e64d",
+  storageBucket: "petstore-1e64d.appspot.com",
+  messagingSenderId: "861336376598",
+  appId: "1:861336376598:web:68e2a53d6026a39650ec37",
+  measurementId: "G-D73B4PFL4H"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
