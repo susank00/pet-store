@@ -4,7 +4,9 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { ref, getDownloadURL } from "firebase/storage";
 import "/index.css";
+import { storage } from "../../firebaseConfig";
 
 const MyNavbar = () => {
   const navigation = [
@@ -13,6 +15,7 @@ const MyNavbar = () => {
     { name: "Products", href: "/products", current: false },
     { name: "How to Operate", href: "/howto", current: false },
   ];
+  const [previewImage, setPreviewImage] = useState(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState(null);
@@ -77,6 +80,16 @@ const MyNavbar = () => {
             }/employeeNames/${userId}`
           );
           setEmployees(response.data);
+          if (response.data.image) {
+            const imageRef = ref(
+              storage,
+              `profileImages/${userId}/${response.data.image}`
+            );
+            const downloadURL = await getDownloadURL(imageRef);
+            setPreviewImage(downloadURL); // Set the fetched image URL
+          } else {
+            setPreviewImage(null);
+          }
         } catch (error) {
           console.error("Error fetching profile:", error);
         }
@@ -91,6 +104,7 @@ const MyNavbar = () => {
     setUserName(null);
     setIsLoggedIn(false);
     setEmployees(null);
+    setPreviewImage(null);
 
     if (isSessionExpired) {
       alert("You are being logged out due to inactive session.");
@@ -175,9 +189,7 @@ const MyNavbar = () => {
                         <span className="sr-only">Open user menu</span>
                         <img
                           className="h-8 w-8 rounded-full"
-                          src={`${
-                            import.meta.env.VITE_API_URL_PROD_API_URL
-                          }/public/images/${employees?.image}`}
+                          src={previewImage}
                           alt="User Avatar"
                         />
                       </Menu.Button>

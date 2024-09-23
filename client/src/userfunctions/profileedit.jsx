@@ -95,7 +95,7 @@ const Profileedit = () => {
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
-        navigate("/login");
+        // navigate("/login");
       }
     };
     if (UserId) {
