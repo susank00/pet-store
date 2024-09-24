@@ -409,7 +409,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({
-  storage: storage,
+  // storage: storage,
 });
 
 const EmployeeImage = require("./models/Employee");
@@ -446,6 +446,20 @@ app.post("/api/products", upload.single("file"), async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+// app.post("/api/products", async (req, res) => {
+//   // Assume the frontend sends an array of product objects
+//   const products = req.body; // This should be an array of product objects
+
+//   try {
+//     // Insert all products at once
+//     const newProducts = await Product.insertMany(products);
+
+//     res.status(201).json({ success: true, products: newProducts });
+//   } catch (error) {
+//     console.error("Error adding products:", error.message);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// });
 
 // Add endpoint for fetching products
 
