@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-
+import {
+  ref,
+  deleteObject,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import { storage } from "../../firebaseConfig";
 const Adminproductupdate = () => {
+  const getFileExtension = (filename) => {
+    return filename.split(".").pop();
+  };
   const [showForm, setShowForm] = useState(true);
   const handleClose = () => {
     setName("");
@@ -28,6 +37,7 @@ const Adminproductupdate = () => {
       reader.readAsDataURL(selectedFile);
       setFile(selectedFile);
     } else {
+      console.error("not found file");
       setPreviewImage(null);
     }
   };
@@ -35,6 +45,7 @@ const Adminproductupdate = () => {
   const selectedProductId = useSelector(
     (state) => state.reducer.selectedProductId
   );
+  const [oldImageName, setOldImageName] = useState("");
   const [product, setProduct] = useState(null);
   const [file, setFile] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +57,7 @@ const Adminproductupdate = () => {
 
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  // const [image, setImage] = useState("");
+  const [image, setImage] = useState("");
 
   // const handleChange = (event) => {
   //   setValue(event.target.value);
@@ -68,10 +79,21 @@ const Adminproductupdate = () => {
         setDescription(response.data.description);
         setFile(response.data.file);
         setProduct(response.data);
-        setQuantity(response.data);
+        setQuantity(response.data.quantity);
+        setOldImageName(response.data);
         // setImage(response.data.image);
+
+        if (response.data.image) {
+          setOldImageName(response.data.image);
+          const imageRef = ref(storage, `productimages/${response.data.image}`);
+          const downloadURL = await getDownloadURL(imageRef);
+          setPreviewImage(downloadURL); // Set the fetched image URL
+        } else {
+          console.error("some error ");
+          setPreviewImage(null);
+        }
       } catch (error) {
-        setError(error.message);
+        console.error(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -83,42 +105,77 @@ const Adminproductupdate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Start the loading state
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
     formData.append("price", price);
     formData.append("category", category);
-    formData.append("file", file);
     formData.append("quantity", quantity);
+
+    let newImageUploaded = false;
+    let newFileName = null; // Declare to store the new image filename
+
+    if (file) {
+      const timestamp = Date.now();
+      const fileExtension = getFileExtension(file.name);
+      newFileName = `file_${timestamp}.${fileExtension}`;
+
+      try {
+        // Upload the new image to Firebase
+        const imageRef = ref(storage, `productimages/${newFileName}`);
+        await uploadBytes(imageRef, file);
+        const downloadURL = await getDownloadURL(imageRef);
+        console.log("Uploaded Image URL: ", downloadURL);
+
+        // Append the generated image filename to the formData
+        formData.append("image", newFileName);
+        newImageUploaded = true; // Mark that the new image was uploaded
+      } catch (error) {
+        console.error("Error uploading the image:", error);
+        alert("Failed to upload image.");
+        setIsLoading(false);
+        return; // Stop execution if image upload fails
+      }
+    }
+
     try {
-      const updatedProduct = {
-        name,
-        category,
-        price,
-        description,
-        file,
-        quantity,
-        // image,
-      };
+      // Update the product in MongoDB, including the new image filename (if any)
+      // formData.append("image", newFileName || oldImageName); // Use newFileName if it exists, otherwise keep the old image
+
       const response = await axios.put(
         `${
           import.meta.env.VITE_API_URL_PROD_API_URL
         }/api/products/${selectedProductId}`,
         formData,
-        updatedProduct,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         }
       );
+
+      // Update the UI after success
       setProduct(response.data);
       setFile(null);
       setProductImage(previewImage);
       alert("Product updated successfully");
-      // Optionally, you can show a success message or navigate to another page
+
+      if (response.status === 200) {
+        alert("Profile updated successfully!");
+
+        // If a new image was uploaded, delete the old one from Firebase
+        if (newImageUploaded && oldImageName) {
+          const oldImageRef = ref(storage, `productimages/${oldImageName}`);
+          await deleteObject(oldImageRef);
+          console.log("Old image deleted successfully.");
+        }
+      }
     } catch (error) {
       setError(error.message);
+    } finally {
+      setIsLoading(false); // End the loading state
     }
   };
 
@@ -240,14 +297,15 @@ const Adminproductupdate = () => {
                     width: "100%",
                     objectFit: "fill",
                   }}
-                  src={`${import.meta.env.VITE_API_URL_PROD_API_URL}/images/${
-                    product.image
-                  }`}
+                  // src={`${
+                  //   import.meta.env.VITE_API_URL_PROD_API_URL
+                  // }/public/images/${product.image}`}
+                  src={previewImage}
                   alt="Previous Image"
                 />
               </div>
             )}
-
+            {/* 
             {previewImage && (
               <div>
                 <img
@@ -260,7 +318,7 @@ const Adminproductupdate = () => {
                   alt="Preview Image"
                 />
               </div>
-            )}
+            )} */}
             {/* <div>
           <img
             style={{

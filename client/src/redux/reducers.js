@@ -20,7 +20,7 @@ const reducer = createReducer(initialState, (builder) => {
       state.selectedProductId = action.payload;
     })
     .addCase(SET_USER_ID, (state, action) => {
-      console.log("SET_USER_ID action dispatched. Payload:", action.payload);
+      // console.log("SET_USER_ID action dispatched. Payload:", action.payload);
       state.UserId = action.payload;
     })
     .addCase(SET_SELECTED_EMPLOYEES_ID, (state, action) => {

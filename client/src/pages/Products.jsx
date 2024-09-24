@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { ref, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebaseConfig"; // Import Firebase storage
+import SideNavbar from "../components/SideNavbar";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -9,6 +12,7 @@ const Products = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const [UserId, setUserId] = useState(null);
+  const [productImages, setProductImages] = useState({}); // Store images by product ID
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -25,13 +29,34 @@ const Products = () => {
           `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/products`
         );
         setProducts(response.data);
+
+        // Fetch images for each product
+        response.data.forEach(async (product) => {
+          if (product.image) {
+            const imageRef = ref(storage, `productimages/${product.image}`);
+            try {
+              const downloadURL = await getDownloadURL(imageRef);
+              setProductImages((prev) => ({
+                ...prev,
+                [product._id]: downloadURL,
+              })); // Store image URL by product ID
+            } catch (err) {
+              console.error(
+                `Error fetching image for product ${product._id}:`,
+                err
+              );
+            }
+          }
+        });
       } catch (error) {
         console.error("Error fetching products:", error);
+        // Optionally navigate to login on error
+        // navigate("/login");
       }
     };
 
     fetchProducts();
-  }, []);
+  }, [UserId, navigate]);
 
   const handleBuy = async (product) => {
     if (!username) {
@@ -71,7 +96,7 @@ const Products = () => {
   };
 
   return (
-    <div className=" bg-gradient-to-br from-blue-300 to-purple-300 min-h-screen p-4">
+    <div className="bg-gradient-to-br from-blue-300 to-purple-300 min-h-screen p-4">
       <div className="container mx-auto p-4">
         <h2 className="text-4xl font-bold mb-8 text-white text-center">
           Available Products
@@ -87,9 +112,7 @@ const Products = () => {
             >
               <img
                 className="w-full h-48 object-cover rounded-t-lg"
-                src={`${
-                  import.meta.env.VITE_API_URL_PROD_API_URL
-                }/public/images/${product.image}`}
+                src={productImages[product._id] || ""} // Use the fetched image URL
                 alt={product.name}
               />
               <div className="p-4">

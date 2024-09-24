@@ -41,7 +41,7 @@ const Profile = () => {
       // console.log(response);
       const userId = response.data.user.userId;
       dispatch(setUserId(userId));
-      console.log("Dispatched action:", dispatch(setUserId(userId)));
+      // console.log("Dispatched action:", dispatch(setUserId(userId)));
     } catch (error) {
       if (error.response) {
         alert(error.response.data.errors[0].message);

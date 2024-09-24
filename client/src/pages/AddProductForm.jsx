@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebaseConfig";
 
 const AddProductForm = () => {
   const [name, setName] = useState("");
@@ -11,6 +13,7 @@ const AddProductForm = () => {
   const [category, setCategory] = useState("");
   const [quantity, setQuantity] = useState("");
   const [showForm, setShowForm] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const handleClose = () => {
     setName("");
     setCategory("");
@@ -20,10 +23,12 @@ const AddProductForm = () => {
     setQuantity("");
     setShowForm(false);
   };
-
-  const handleSubmit = (e) => {
+  const getFileExtension = (filename) => {
+    return filename.split(".").pop();
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
-
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("name", name);
@@ -31,6 +36,28 @@ const AddProductForm = () => {
     formData.append("price", price);
     formData.append("category", category);
     formData.append("quantity", quantity);
+    if (file) {
+      const timestamp = Date.now();
+      const fileExtension = getFileExtension(file.name);
+      const newFileName = `file_${timestamp}.${fileExtension}`;
+
+      try {
+        // Upload the new image
+        const imageRef = ref(storage, `productimages/${newFileName}`);
+        await uploadBytes(imageRef, file);
+        const downloadURL = await getDownloadURL(imageRef);
+        console.log("Uploaded Image URL: ", downloadURL);
+
+        // Append the generated file name for backend
+        formData.append("image", newFileName);
+        // Mark that the new image was uploaded
+      } catch (error) {
+        console.error("Error uploading the image:", error);
+        alert("Failed to upload image.");
+        setIsLoading(false);
+        return; // Stop execution on error
+      }
+    }
 
     axios
       .post(
