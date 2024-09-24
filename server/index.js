@@ -236,7 +236,7 @@ app.post("/login", async (req, res) => {
         const accessToken = jwt.sign(
           { userId: user._id, email: user.email, username: user.name },
           secretKey,
-          { expiresIn: "600s" } // Short-lived access token
+          { expiresIn: "60000s" } // Short-lived access token
         );
         console.log(accessToken);
         // Generate a new refresh token with a longer expiration time
@@ -435,7 +435,7 @@ app.post("/api/products", upload.single("file"), async (req, res) => {
       name,
       description,
       price,
-      image: req.file.filename,
+      image,
       category,
       quantity,
     });
@@ -479,8 +479,15 @@ app
   })
   .put(upload.single("file"), async (req, res) => {
     const productId = req.params.id;
-    const { name, description, price, category, quantity } = req.body;
-    const updatedFields = { name, description, price, category, quantity };
+    const { name, description, price, category, quantity, image } = req.body;
+    const updatedFields = {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      image,
+    };
 
     try {
       const product = await Product.findById(productId);
@@ -509,7 +516,7 @@ app
       console.error("Error updating product:", error.message);
       res
         .status(500)
-        .json({ success: false, message: "Internal server error" });
+        .json({ success: false, message: "Internal SSSserver error" });
     }
   });
 // api to get employye by employee id
