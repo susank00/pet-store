@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebaseConfig"; // Import Firebase storage
-import SideNavbar from "../components/SideNavbar";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -96,41 +95,48 @@ const Products = () => {
   };
 
   return (
+    // <div className="bg-black min-h-screen p-8">
     <div className="bg-gradient-to-br from-blue-300 to-purple-300 min-h-screen p-4">
-      <div className="container mx-auto p-4">
-        <h2 className="text-4xl font-bold mb-8 text-white text-center">
+      <div className="container mx-auto">
+        <h2 className="text-5xl font-bold mb-8 text-white text-center tracking-widest font-orbitron">
           Available Products
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {products.map((product) => (
             <div
               key={product._id}
-              className="relative bg-white bg-opacity-30 backdrop-blur-lg rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105"
+              className="relative group bg-gradient-to-br from-pink-500 to-indigo-500 p-6 rounded-xl shadow-2xl overflow-hidden transition-all duration-500 transform hover:scale-105 hover:shadow-neon"
               style={{
-                border: "1px solid rgba(255, 255, 255, 0.5)",
+                border: "2px solid rgba(255, 255, 255, 0.1)",
               }}
             >
+              <div className="absolute inset-0 bg-gradient-to-t from-black opacity-50 transition-opacity duration-500 group-hover:opacity-30"></div>
               <img
-                className="w-full h-48 object-cover rounded-t-lg"
-                src={productImages[product._id] || ""} // Use the fetched image URL
+                className="w-full h-64 object-cover rounded-xl transform group-hover:scale-110 transition-transform duration-500"
+                src={
+                  productImages[product._id] ||
+                  "https://via.placeholder.com/150"
+                }
                 alt={product.name}
               />
-              <div className="p-4">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              <div className="relative p-6 z-10">
+                <h3 className="text-3xl font-bold text-white mb-4 font-orbitron">
                   {product.name}
                 </h3>
-                <p className="text-gray-600 mb-2">{product.description}</p>
-                <div className="flex justify-between items-center">
-                  <p className="text-gray-800 font-bold">
+                <p className="text-gray-200 text-sm mb-6">
+                  {product.description}
+                </p>
+                <div className="flex justify-between items-center mb-6">
+                  <p className="text-white text-xl font-semibold">
                     Qty: {product.quantity}
                   </p>
-                  <p className="text-gray-800 font-bold">
-                    Price: Rs.{product.price}
+                  <p className="text-white text-xl font-semibold">
+                    Price: Rs. {product.price}
                   </p>
                 </div>
                 <button
                   type="button"
-                  className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition duration-200"
+                  className="w-full py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-lg font-semibold hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 transform hover:scale-105 shadow-neon hover:shadow-pink-600/50"
                   onClick={() => handleBuy(product)}
                 >
                   Buy Now
