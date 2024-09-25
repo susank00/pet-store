@@ -1,6 +1,0 @@
-# KHALTI_SECRET_KEY=1b802ef7cbe443ada84d578813bb6e3e
-# REACT_APP_SUCCESS_URL=http://localhost:5173/success
-# REACT_APP_WEBSITE_URL=http://localhost:5173
-# MONGO_URL=mongodb+srv://susankhatri00:aJVDLJMCi19mtNsQ@mern-login-db.zd7m4v9.mongodb.net/employee
-
-VITE_API_URL=http://localhost:5173
