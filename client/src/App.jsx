@@ -19,11 +19,15 @@ import Success from "./pages/Success";
 import Howto from "./pages/How_to";
 import PurchaseHistory from "./userfunctions/purchasehistory";
 import Imageupload from "./userfunctions/Imageupload";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const App = () => {
   return (
     <>
       <BrowserRouter>
         <MyNavbar />
+        <ToastContainer />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />

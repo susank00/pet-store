@@ -1,24 +1,17 @@
-import { useEffect } from "react";
-// import { Carousel } from "flowbite-react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
-
 import SideNavbar from "../components/SideNavbar";
 import { useDispatch } from "react-redux";
 import { setUserId } from "../redux/actions";
 
 const Profile = () => {
-  // const location = useLocation();
-  // const [name, setName] = useState("");
-  // // const [userId, setUserId] = useState("");
-  // const [role, setRole] = useState("");
-  // const [loading, setLoading] = useState(true);
-
   const dispatch = useDispatch();
-  useEffect(() => {
-    // Fetch user info only once when the component mounts
+  const [username, setUsername] = useState(""); // State for storing username
+  const [loading, setLoading] = useState(true); // State for loading
 
-    getProfile();
+  useEffect(() => {
+    getProfile(); // Fetch profile data when the component mounts
   }, []);
 
   const getProfile = async () => {
@@ -34,282 +27,59 @@ const Profile = () => {
         }
       );
 
-      // setUserId(response.data.user.userId);
-      // setName(response.data.user.name);
-      // setRole(response.data.user.role);
-      // setLoading(false);
-      // console.log(response);
       const userId = response.data.user.userId;
-      dispatch(setUserId(userId));
-      // console.log("Dispatched action:", dispatch(setUserId(userId)));
+      const userName = response.data.user.name; // Extract username from response
+
+      dispatch(setUserId(userId)); // Dispatch userId to Redux store
+      setUsername(userName); // Set username state
+      setLoading(false); // Set loading to false after data is fetched
     } catch (error) {
       if (error.response) {
         alert(error.response.data.errors[0].message);
       } else {
         alert("Unknown error, please try again");
       }
+      setLoading(false); // Even on error, stop the loading state
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-2xl font-semibold">
+        Loading...
+      </div>
+    ); // Stylish loading state
+  }
 
   return (
     <>
       {localStorage.getItem("accessToken") ? (
         <>
-          <SideNavbar />
+          <div className="flex">
+            {/* Main Content */}
+            <div className="flex-grow relative w-full min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 text-white flex items-center justify-center">
+              {/* Background Image or Gradient */}
 
-          <div className=" p-4 sm:ml-64 ">
-            <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-                <p className="text-2xl text-gray-400 dark:text-gray-500">
-                  <svg
-                    className="w-3.5 h-3.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 18"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 1v16M1 9h16"
-                    />
-                  </svg>
+              <div className="absolute inset-0 z-0 bg-hero-pattern bg-cover bg-center opacity-50"></div>
+              {/* Welcome Section */}
+              <SideNavbar />
+              <div className="relative z-10 text-center p-8">
+                <h1 className="text-5xl font-extrabold animate-fadeInUp mb-4">
+                  Welcome, {username}!
+                </h1>
+                <p className="text-xl font-light mb-8 animate-fadeIn delay-2s">
+                  We are glad to have you here. Explore your profile and
+                  settings.
                 </p>
-              </div>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-                <p className="text-2xl text-gray-400 dark:text-gray-500">
-                  <svg
-                    className="w-3.5 h-3.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 18"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 1v16M1 9h16"
-                    />
-                  </svg>
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
+
+                {/* CTA Buttons */}
+                <div className="space-x-4">
+                  <button className="bg-white text-indigo-600 px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition-all">
+                    Profile Settings
+                  </button>
+                  <button className="bg-indigo-500 text-white px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-indigo-700 transition-all">
+                    Explore Features
+                  </button>
                 </div>
               </div>
             </div>

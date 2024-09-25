@@ -3,6 +3,9 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import axios from "axios";
 import { ref, getDownloadURL } from "firebase/storage";
 import "/index.css";
@@ -10,7 +13,7 @@ import { storage } from "../../firebaseConfig";
 
 const MyNavbar = () => {
   const navigation = [
-    { name: "Dashboard", href: "/", current: true },
+    { name: "Home", href: "/", current: false },
     { name: "Profile", href: "/profile", current: false },
     { name: "Products", href: "/products", current: false },
     { name: "How to Operate", href: "/howto", current: false },
@@ -99,22 +102,57 @@ const MyNavbar = () => {
     fetchProfile();
   }, [userId]);
 
-  const onLogout = async (isSessionExpired = false) => {
+  // const onLogout = async (isSessionExpired = false) => {
+  //   localStorage.removeItem("accessToken");
+  //   setUserName(null);
+  //   setIsLoggedIn(false);
+  //   setEmployees(null);
+  //   setPreviewImage(null);
+
+  //   if (isSessionExpired) {
+  //     alert("You are being logged out due to inactive session.");
+  //   }
+
+  //   navigate("/"); // Redirect to the home page
+  // };
+
+  const onLogin = () => {
+    navigate("/login");
+  };
+  //
+  const onLogout = async () => {
+    // Check if the token is present and expired
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000; // Get current time in seconds
+
+        // Check if the token is expired
+        if (decodedToken.exp < currentTime) {
+          toast.success("You are being logged out due to an inactive session.");
+        } else {
+          // alert("You have been logged out successfully.");
+          toast.success("You have been logged out successfully.");
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        toast.success("You have been logged out successfully.");
+
+        // alert("You have been logged out successfully.");
+      }
+    } else {
+      toast.suceess("You have been logged out successfully.");
+    }
+
+    // Remove token and reset states
     localStorage.removeItem("accessToken");
     setUserName(null);
     setIsLoggedIn(false);
     setEmployees(null);
     setPreviewImage(null);
 
-    if (isSessionExpired) {
-      alert("You are being logged out due to inactive session.");
-    }
-
     navigate("/"); // Redirect to the home page
-  };
-
-  const onLogin = () => {
-    navigate("/login");
   };
 
   function classNames(...classes) {
@@ -206,7 +244,7 @@ const MyNavbar = () => {
                           <Menu.Item>
                             {({ active }) => (
                               <a
-                                href="#"
+                                href="/profile"
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
@@ -216,16 +254,29 @@ const MyNavbar = () => {
                               </a>
                             )}
                           </Menu.Item>
-                          <Menu.Item>
+                          {/* <Menu.Item>
                             {({ active }) => (
                               <a
-                                href="/User"
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}
+                                onClick={isLoggedIn ? onLogout : onLogin}
                               >
-                                Sign out
+                                {isLoggedIn ? "Logout" : "Login"}
+                              </a>
+                            )}
+                          </Menu.Item> */}
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                                onClick={onLogout} // Call onLogout directly
+                              >
+                                {isLoggedIn ? "Logout" : "Login"}
                               </a>
                             )}
                           </Menu.Item>
