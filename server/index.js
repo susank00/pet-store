@@ -5,7 +5,7 @@ const cors = require("cors");
 const EmployeeModel = require("./models/Employee");
 const PurchaseHistory = require("./models/purchaseHistoryy");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
+// const crypto = require("crypto");
 const multer = require("multer");
 const path = require("path");
 const router = express.Router();
@@ -13,6 +13,7 @@ const axios = require("axios");
 require("dotenv").config();
 const app = express();
 app.use(express.json());
+const bcrypt = require("bcryptjs");
 
 app.use(cors());
 // app.use(express.static("public"));
@@ -216,9 +217,58 @@ app.get("/profile/:userId", authenticateToken, (req, res) => {
 
 // end of get user id
 
+// app.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+
+//   if (!email || !password) {
+//     return res.json({
+//       success: false,
+//       message: "Please enter both email and password",
+//     });
+//   }
+
+//   try {
+//     const user = await EmployeeModel.findOne({ email: email });
+
+//     if (user) {
+//       // Here, you should ideally use bcrypt to compare hashed passwords
+//       if (user.password === password) {
+//         // Generate a new access token with a short expiration time
+//         const accessToken = jwt.sign(
+//           { userId: user._id, email: user.email, username: user.name },
+//           secretKey,
+//           { expiresIn: "600s" } // Short-lived access token
+//         );
+//         console.log(accessToken);
+//         // Generate a new refresh token with a longer expiration time
+//         // const refreshToken = jwt.sign(
+//         //   { userId: user._id, email: user.email, username: user.name },
+//         //   secretKey,
+//         //   { expiresIn: "7d" } // Longer-lived refresh token
+//         // );
+
+//         res.json({
+//           success: true,
+//           message: "Login successful",
+//           user: { name: user.name, email: user.email },
+//           accessToken: accessToken,
+//           // refreshToken: refreshToken,
+//         });
+//       } else {
+//         res.json({ success: false, message: "Incorrect password" });
+//       }
+//     } else {
+//       res.json({ success: false, message: "User not found" });
+//     }
+//   } catch (error) {
+//     console.error("Error during login:", error.message);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// });
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
+  // Check if both email and password are provided
   if (!email || !password) {
     return res.json({
       success: false,
@@ -227,39 +277,53 @@ app.post("/login", async (req, res) => {
   }
 
   try {
-    const user = await EmployeeModel.findOne({ email: email });
+    // Find the user by email
+    const user = await EmployeeModel.findOne({ email });
 
+    // Check if user exists
     if (user) {
-      // Here, you should ideally use bcrypt to compare hashed passwords
-      if (user.password === password) {
+      // Compare the provided password with the hashed password
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (isMatch) {
         // Generate a new access token with a short expiration time
         const accessToken = jwt.sign(
-          { userId: user._id, email: user.email, username: user.name },
+          {
+            userId: user._id,
+            email: user.email,
+            username: user.name,
+            role: user.role,
+          },
           secretKey,
-          { expiresIn: "60000s" } // Short-lived access token
+          { expiresIn: "600s" } // Short-lived access token (10 minutes)
         );
         console.log(accessToken);
-        // Generate a new refresh token with a longer expiration time
+
+        // Optionally generate a new refresh token (commented out)
         // const refreshToken = jwt.sign(
         //   { userId: user._id, email: user.email, username: user.name },
         //   secretKey,
-        //   { expiresIn: "7d" } // Longer-lived refresh token
+        //   { expiresIn: "7d" } // Longer-lived refresh token (7 days)
         // );
 
+        // Send the success response with the tokens and user data
         res.json({
           success: true,
           message: "Login successful",
           user: { name: user.name, email: user.email },
           accessToken: accessToken,
-          // refreshToken: refreshToken,
+          // refreshToken: refreshToken, // Uncomment if you're using refresh tokens
         });
       } else {
+        // Incorrect password
         res.json({ success: false, message: "Incorrect password" });
       }
     } else {
+      // User not found
       res.json({ success: false, message: "User not found" });
     }
   } catch (error) {
+    // Handle any errors that occur during the login process
     console.error("Error during login:", error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
@@ -357,6 +421,44 @@ app.delete("/api/employees/delete/:name", async (req, res) => {
     });
   }
 });
+// app.put("/employees/:employeeName", async (req, res) => {
+//   const { employeeName } = req.params;
+//   const { newName, newPassword } = req.body;
+
+//   try {
+//     // Check if either newName or newPassword is provided
+//     if (!newName && !newPassword) {
+//       return res
+//         .status(400)
+//         .json({ error: "Either newName or newPassword must be provided" });
+//     }
+
+//     // Check if the employee exists
+//     const existingEmployee = await EmployeeModel.findOne({
+//       name: employeeName,
+//     });
+//     if (!existingEmployee) {
+//       return res.status(404).json({ message: "Employee not found" });
+//     }
+
+//     // Update the employee's name and/or password
+//     if (newName) {
+//       existingEmployee.name = newName;
+//     }
+//     if (newPassword) {
+//       // Hash the new password before saving
+//       existingEmployee.password = newPassword; // Replace with bcrypt hash
+//     }
+
+//     // Save the updated employee
+//     await existingEmployee.save();
+
+//     return res.status(200).json({ message: "Employee updated successfully" });
+//   } catch (error) {
+//     console.error("Error updating employee:", error.message);
+//     return res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 app.put("/employees/:employeeName", async (req, res) => {
   const { employeeName } = req.params;
   const { newName, newPassword } = req.body;
@@ -381,9 +483,11 @@ app.put("/employees/:employeeName", async (req, res) => {
     if (newName) {
       existingEmployee.name = newName;
     }
+
     if (newPassword) {
       // Hash the new password before saving
-      existingEmployee.password = newPassword; // Replace with bcrypt hash
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      existingEmployee.password = hashedPassword;
     }
 
     // Save the updated employee
@@ -554,16 +658,19 @@ app.route("/employeeNames/:id").put(upload.single("file"), async (req, res) => {
   const { name, email, password, role, image } = req.body;
 
   try {
+    // Prepare the update object
+    const updateData = { name, email, role, image };
+
+    // If a password is provided, hash it before updating
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateData.password = hashedPassword;
+    }
+
     // Find and update the employee
     const updatedEmployee = await EmployeeModel.findByIdAndUpdate(
       id,
-      {
-        name,
-        email,
-        password,
-        role,
-        image, // Update image filename if file exists
-      },
+      updateData,
       { new: true, runValidators: true } // Return the updated document and ensure validation
     );
 
