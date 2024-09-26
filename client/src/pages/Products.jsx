@@ -7,6 +7,8 @@ import { storage } from "../../firebaseConfig"; // Import Firebase storage
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]); // Filtered products based on dropdown
+  const [filter, setFilter] = useState("available"); // Set default filter to 'available'
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -28,6 +30,7 @@ const Products = () => {
           `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/products`
         );
         setProducts(response.data);
+        filterProducts(response.data, filter); // Apply filter when products are fetched
 
         // Fetch images for each product
         response.data.forEach(async (product) => {
@@ -49,13 +52,32 @@ const Products = () => {
         });
       } catch (error) {
         console.error("Error fetching products:", error);
-        // Optionally navigate to login on error
-        // navigate("/login");
       }
     };
 
     fetchProducts();
-  }, [UserId, navigate]);
+  }, [UserId, filter]); // Fetch products when the filter changes
+
+  // Function to filter products based on selected option
+  const filterProducts = (products, filter) => {
+    if (filter === "available") {
+      setFilteredProducts(products.filter((product) => product.quantity > 0));
+    } else if (filter === "out-of-stock") {
+      setFilteredProducts(
+        products.filter(
+          (product) => product.quantity === 0 || product.quantity === null
+        )
+      );
+    } else {
+      setFilteredProducts(products); // Show all products
+    }
+  };
+
+  // Handle the dropdown change
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+    filterProducts(products, event.target.value);
+  };
 
   const handleBuy = async (product) => {
     if (!username) {
@@ -95,14 +117,31 @@ const Products = () => {
   };
 
   return (
-    // <div className="bg-black min-h-screen p-8">
     <div className="bg-gradient-to-br from-blue-300 to-purple-300 min-h-screen p-4">
       <div className="container mx-auto">
         <h2 className="text-5xl font-bold mb-8 text-white text-center tracking-widest font-orbitron">
           Available Products
         </h2>
+
+        {/* Dropdown for selecting product availability filter */}
+        <div className="mb-6">
+          <label htmlFor="filter" className="text-lg font-semibold text-white">
+            Filter products:
+          </label>
+          <select
+            id="filter"
+            value={filter}
+            onChange={handleFilterChange}
+            className="ml-4 p-3 rounded-lg bg-white text-black w-48"
+          >
+            <option value="all">All Products</option>
+            <option value="available">Available Products</option>
+            <option value="out-of-stock">Out of Stock</option>
+          </select>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div
               key={product._id}
               className="relative group bg-gradient-to-br from-pink-500 to-indigo-500 p-6 rounded-xl shadow-2xl overflow-hidden transition-all duration-500 transform hover:scale-105 hover:shadow-neon"
@@ -134,12 +173,24 @@ const Products = () => {
                     Price: Rs. {product.price}
                   </p>
                 </div>
-                <button
+                {/* <button
                   type="button"
                   className="w-full py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-lg font-semibold hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 transform hover:scale-105 shadow-neon hover:shadow-pink-600/50"
                   onClick={() => handleBuy(product)}
                 >
                   Buy Now
+                </button> */}
+                <button
+                  type="button"
+                  className={`w-full py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-neon ${
+                    product.quantity > 0
+                      ? "hover:from-purple-600 hover:to-indigo-600"
+                      : "cursor-not-allowed opacity-50"
+                  }`}
+                  onClick={() => handleBuy(product)}
+                  disabled={product.quantity <= 0 || product.quantity === null} // Disable if quantity is 0 or null
+                >
+                  {product.quantity > 0 ? "Buy Now" : "Out of Stock"}
                 </button>
               </div>
             </div>

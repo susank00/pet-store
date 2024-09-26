@@ -1,28 +1,35 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import SideNavbar from "../components/SideNavbar";
 import { useDispatch } from "react-redux";
 import { setUserId } from "../redux/actions";
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize navigate hook
   const [username, setUsername] = useState(""); // State for storing username
   const [loading, setLoading] = useState(true); // State for loading
 
   useEffect(() => {
-    getProfile(); // Fetch profile data when the component mounts
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      navigate("/login"); // If access token is missing, redirect to login immediately
+    } else {
+      getProfile(); // Fetch profile data
+    }
   }, []);
 
   const getProfile = async () => {
-    const getAccessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
+
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL_PROD_API_URL}/profile`,
         {
           timeout: 10000,
           headers: {
-            Authorization: `Bearer ${getAccessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -39,6 +46,7 @@ const Profile = () => {
       } else {
         alert("Unknown error, please try again");
       }
+      navigate("/login"); // Redirect to login on error
       setLoading(false); // Even on error, stop the loading state
     }
   };
@@ -59,7 +67,6 @@ const Profile = () => {
             {/* Main Content */}
             <div className="flex-grow relative w-full min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 text-white flex items-center justify-center">
               {/* Background Image or Gradient */}
-
               <div className="absolute inset-0 z-0 bg-hero-pattern bg-cover bg-center opacity-50"></div>
               {/* Welcome Section */}
               <SideNavbar />
@@ -87,7 +94,7 @@ const Profile = () => {
         </>
       ) : (
         <>
-          <Navigate replace to="/login" />
+          <navigate to="/login" />
         </>
       )}
     </>

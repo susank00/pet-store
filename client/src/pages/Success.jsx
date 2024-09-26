@@ -6,6 +6,8 @@ import { jwtDecode } from "jwt-decode";
 const SuccessPage = () => {
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [UserId, setUserId] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [quantity, setQuantity] = useState([]);
   const location = useLocation();
 
   // Helper function to parse URL query parameters
@@ -31,7 +33,32 @@ const SuccessPage = () => {
     }
   }, []);
 
-  // Verify payment once UserId is set and payment status is completed
+  // Fetch product details
+  useEffect(() => {
+    const getproductdetails = async () => {
+      const { purchase_order_id } = getQueryParams(); // Get purchase_order_id from URL query
+      if (purchase_order_id) {
+        try {
+          const response = await axios.get(
+            `${
+              import.meta.env.VITE_API_URL_PROD_API_URL
+            }/api/products/${purchase_order_id}`
+          );
+          setProducts(response.data);
+          setQuantity(response.data.quantity);
+          console.log("Product details:", response.data.quantity); // Log product details to console
+        } catch (error) {
+          console.error("Error fetching product details:", error);
+        }
+      } else {
+        console.log("No purchase_order_id found in URL parameters.");
+      }
+    };
+
+    getproductdetails();
+  }, [location.search]);
+
+  // Verify payment and update quantity
   useEffect(() => {
     const paymentDetails = getQueryParams();
 
@@ -59,6 +86,13 @@ const SuccessPage = () => {
           await axios.post(
             `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/purchasehistory`,
             productData
+          );
+
+          // Update product quantity
+          await axios.patch(
+            `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/products/${
+              paymentDetails.purchase_order_id
+            }`
           );
 
           // Update purchase history with timestamp
