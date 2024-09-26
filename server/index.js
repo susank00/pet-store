@@ -550,6 +550,21 @@ app.post("/api/products", upload.single("file"), async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+app.route("/api/products:id").get(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const Products = await Product.findById(id);
+
+    if (!products) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.status(200).json(Products);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching employee", error });
+  }
+});
 // app.post("/api/products", async (req, res) => {
 //   // Assume the frontend sends an array of product objects
 //   const products = req.body; // This should be an array of product objects
@@ -636,7 +651,37 @@ app
         .status(500)
         .json({ success: false, message: "Internal SSSserver error" });
     }
+  })
+  .patch(async (req, res) => {
+    const { id } = req.params;
+    try {
+      const product = await Product.findById(id);
+      if (!product) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Product not found" });
+      }
+
+      // Decrement the quantity by 1
+      if (product.quantity > 0) {
+        product.quantity -= 1;
+        await product.save();
+        res.json({
+          success: true,
+          message: "Product quantity updated",
+          product,
+        });
+      } else {
+        res.status(400).json({ success: false, message: "Out of stock" });
+      }
+    } catch (error) {
+      console.error("Error updating product quantity:", error.message);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    }
   });
+
 // api to get employye by employee id
 app.route("/employeeNames/:id").get(async (req, res) => {
   const { id } = req.params;
