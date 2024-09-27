@@ -1,6 +1,7 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useEffect } from "react";
 
 const Home = () => {
   const settings = {
@@ -17,6 +18,31 @@ const Home = () => {
     const sound = new Audio(soundFile);
     sound.play();
   };
+
+  // Example function to log the IP address
+  const logIpAddress = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL_PROD_API_URL}/log-ip`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.text(); // or response.json() based on your needs
+      console.log(data); // Log the response from the server
+    } catch (error) {
+      console.error("Error logging IP address:", error);
+    }
+  };
+
+  // Call the function when the component mounts
+  useEffect(() => {
+    logIpAddress();
+  }, []); // Empty dependency array ensures it runs once when the component mounts
 
   return (
     <div className="flex flex-col bg-gradient-to-b from-blue-200 to-blue-500 flex-grow">
