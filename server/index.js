@@ -953,6 +953,7 @@ const IpAddress = require("./models/Ipschema");
 //     res.status(500).send("Error logging IP address");
 //   }
 // });
+
 // app.post("/log-ip", async (req, res) => {
 //   // Get the IP address and User-Agent from the request
 //   // const ipAddress = req.ip || req.socket.remoteAddress;

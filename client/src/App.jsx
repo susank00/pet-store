@@ -49,7 +49,7 @@ const App = () => {
           <Route path="/howto" element={<Howto />} />
           <Route path="/purchasehistory" element={<PurchaseHistory />} />
           <Route path="/uploadfile" element={<Imageupload />} />
-          <Route path="/log" element={<LogViewer />} />
+          <Route path="/loggarum" element={<LogViewer />} />
         </Routes>
       </BrowserRouter>
     </>

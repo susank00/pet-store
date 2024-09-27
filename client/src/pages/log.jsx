@@ -10,7 +10,9 @@ const LogViewer = () => {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/get-logs"); // Adjust the URL to your backend
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL_PROD_API_URL}/get-logs`
+        ); // Adjust the URL to your backend
         setLogs(response.data);
       } catch (err) {
         setError(err.message);
