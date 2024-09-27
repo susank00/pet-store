@@ -7,6 +7,10 @@ export default defineConfig(({ mode }) => {
     define: {
       "process.env.SOME_KEY": JSON.stringify(env.SOME_KEY),
     },
+    server: {
+      host: "0.0.0.0", // or your specific IP address
+      port: 5173, // Ensure the port matches your setup
+    },
     plugins: [react()],
     build: {
       outDir: "build", // Change output directory to 'build'
