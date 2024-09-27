@@ -897,7 +897,96 @@ app.post("/api/verify-payment", async (req, res) => {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ending>>>>>>>>>>>>>
 // end of deleteuser func
 // end>>>>>>>>>>
+const IpAddress = require("./models/Ipschema");
+// app.use((req, res, next) => {
+//   const ipAddress = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+//   // Save the IP address to the database
+//   const ipEntry = new IpAddress({ ipAddress });
+//   ipEntry.save((err) => {
+//     if (err) console.error(err);
+//     next();
+//   });
+// });
+// app.post("/log-ip", (req, res) => {
+//   const ipAddress = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+//   // Save the IP address to the database
+//   const ipEntry = new IpAddress({ ipAddress });
+//   ipEntry.save((err) => {
+//     if (err) return res.status(500).send("Error saving IP address.");
+//     res.send("IP address captured and stored in the database.");
+//   });
+// });
 
+// app.post("/log-ip", (req, res) => {
+//   // Get the IP address from the request
+//   const ipAddress = req.ip || req.socket.remoteAddress;
+
+//   console.log(`IP Address logged: ${ipAddress}`);
+
+//   // Respond back to the client
+//   res.send("IP address logged successfully");
+// });
+// // Sample route
+// app.get("/log-ip", (req, res) => {
+//   res.send("IP address captured and stored in the database.");
+//   console.log("IP address captured and stored in the database");
+// });
+// app.post("/log-ip", async (req, res) => {
+//   // Get the IP address and User-Agent from the request
+//   const ipAddress = req.ip || req.socket.remoteAddress;
+//   const userAgent = req.headers["user-agent"];
+
+//   // Create a new entry in the database
+//   const ipEntry = new IpAddress({
+//     ipAddress,
+//     userAgent, // Include User-Agent in the entry
+//     timestamp: new Date(), // Optionally, log the timestamp
+//   });
+
+//   try {
+//     await ipEntry.save(); // Save to the database
+//     console.log(`IP Address logged: ${ipAddress}`);
+//     console.log(`User-Agent logged: ${userAgent}`);
+//     res.send("IP address and User-Agent logged successfully");
+//   } catch (err) {
+//     console.error("Error saving IP address:", err);
+//     res.status(500).send("Error logging IP address");
+//   }
+// });
+app.post("/log-ip", async (req, res) => {
+  // Get the IP address and User-Agent from the request
+  const ipAddress = req.ip || req.socket.remoteAddress;
+  const userAgent = req.headers["user-agent"];
+
+  try {
+    // Fetch geolocation data based on IP address
+    const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
+    const location = geoResponse.data;
+
+    // Create a new entry in the database
+    const ipEntry = new IpAddress({
+      ipAddress,
+      userAgent,
+      location: {
+        country: location.country,
+        region: location.region,
+        city: location.city,
+        latitude: location.lat,
+        longitude: location.lon,
+      },
+      timestamp: new Date(),
+    });
+
+    await ipEntry.save(); // Save to the database
+    console.log(`IP Address logged: ${ipAddress}`);
+    console.log(`User-Agent logged: ${userAgent}`);
+    console.log(`Location logged: ${JSON.stringify(location)}`);
+    res.send("IP address, User-Agent, and location logged successfully");
+  } catch (err) {
+    console.error("Error logging data:", err);
+    res.status(500).send("Error logging IP address or fetching geolocation");
+  }
+});
 app.listen(3001, () => {
   console.log("server is ruuninng");
 });
