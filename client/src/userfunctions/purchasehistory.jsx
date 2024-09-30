@@ -73,7 +73,7 @@ const PurchaseHistory = () => {
               purchaseHistory.map((purchase, index) => (
                 <tr
                   key={index}
-                  className="bg-red-900 border-b dark:bg-gray-800 dark:border-gray-700"
+                  className="bg-grey-50 border-b dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white"
                 >
                   <td className="py-2 px-4 border">{purchase.userId}</td>
                   <td className="py-2 px-4 border">{purchase.productId}</td>

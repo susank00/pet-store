@@ -33,7 +33,7 @@ const Home = () => {
       );
 
       const data = await response.text(); // or response.json() based on your needs
-      console.log(data); // Log the response from the server
+      // console.log(data); // Log the response from the server
     } catch (error) {
       console.error("Error logging IP address:", error);
     }

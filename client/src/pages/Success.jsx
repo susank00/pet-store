@@ -145,23 +145,47 @@ const SuccessPage = () => {
         <h2 className="text-center text-xl font-semibold">
           Your Purchase History
         </h2>
-        <ul className="list-disc list-inside mt-4">
-          {purchaseHistory.length > 0 ? (
-            purchaseHistory.map((purchase, index) => (
-              <li key={index} className="text-lg">
-                Transaction ID: {purchase.transactionId}, pidx: {purchase.pidx},
-                Amount: {parseInt(purchase.amount) / 10} Rs, Mobile:{" "}
-                {purchase.mobile}, product_id: {purchase.productid}, Date:{" "}
-                {new Date(purchase.date).toLocaleString()}{" "}
-                {/* Convert timestamp to readable date */}
-              </li>
-            ))
-          ) : (
-            <p className="text-center text-lg">
-              No purchase history available.
-            </p>
-          )}
-        </ul>
+        <div className="overflow-x-auto mt-4">
+          <table className="min-w-full bg-white border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="py-2 px-4 border">Transaction ID</th>
+                <th className="py-2 px-4 border">Pidx</th>
+                <th className="py-2 px-4 border">Amount (Rs)</th>
+                <th className="py-2 px-4 border">Mobile</th>
+                <th className="py-2 px-4 border">Product ID</th>
+                <th className="py-2 px-4 border">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {purchaseHistory.length > 0 ? (
+                purchaseHistory.map((purchase, index) => (
+                  <tr key={index} className="border-b">
+                    <td className="py-2 px-4 border">
+                      {purchase.transactionId}
+                    </td>
+                    <td className="py-2 px-4 border">{purchase.pidx}</td>
+                    <td className="py-2 px-4 border">
+                      {parseInt(purchase.amount)} Rs
+                    </td>
+                    <td className="py-2 px-4 border">{purchase.mobile}</td>
+                    <td className="py-2 px-4 border">{purchase.productid}</td>
+                    <td className="py-2 px-4 border">
+                      {new Date(purchase.date).toLocaleString()}{" "}
+                      {/* Convert timestamp to readable date */}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="py-2 px-4 text-center">
+                    No purchase history available.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

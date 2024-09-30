@@ -106,7 +106,7 @@ const Adminproductlist = () => {
             {products.map((product) => (
               <tr
                 key={product._id}
-                className="bg-red-900 border-b dark:bg-gray-800 dark:border-gray-700"
+                className="bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white"
               >
                 <th
                   scope="row"

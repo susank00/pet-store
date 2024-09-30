@@ -74,12 +74,12 @@ const Adminfunction = () => {
     <>
       <SideNavbar />
       {rolee === "admin" && (
-        <div className="ml-64 relative overflow-x-auto">
+        <div className="ml-64 relative overflow-x-auto h-screen">
           <h1 className="bg-gray-600 text-5xl text-red-600 text-center p-2">
             All Employees
           </h1>
           {showAdminUserEdit && <AdminUserEdit />}
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <table className="w-full  text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
@@ -103,7 +103,7 @@ const Adminfunction = () => {
               {employees.map((employee) => (
                 <tr
                   key={employee._id}
-                  className="bg-red-900 border-b dark:bg-gray-800 dark:border-gray-700"
+                  className="bg-grey-50 border-b dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white"
                 >
                   <th
                     scope="row"

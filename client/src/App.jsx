@@ -22,6 +22,7 @@ import Imageupload from "./userfunctions/Imageupload";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LogViewer from "./pages/log";
+import Ticket from "../src/userfunctions/ticket";
 
 const App = () => {
   return (
@@ -50,6 +51,7 @@ const App = () => {
           <Route path="/purchasehistory" element={<PurchaseHistory />} />
           <Route path="/uploadfile" element={<Imageupload />} />
           <Route path="/loggarum" element={<LogViewer />} />
+          <Route path="/ticket" element={<Ticket />} />
         </Routes>
       </BrowserRouter>
     </>

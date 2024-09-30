@@ -230,7 +230,7 @@ const Profileedit = () => {
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                 type="password"
-                value={password}
+                // value="enter new password"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>

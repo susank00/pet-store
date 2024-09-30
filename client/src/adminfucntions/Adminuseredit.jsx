@@ -135,7 +135,7 @@ const AdminUserEdit = () => {
       {showForm && (
         <div
           ref={formRef}
-          className="absolute w-6/12 rounded-lg p-4 mt-8 bg-gray-800 z-10"
+          className="absolute w-6/12 rounded-lg p-4 mt-8 bg-gray-800 z-15 "
           style={{ transform: `translate(${position.x}px, ${position.y}px)` }} // Apply position
         >
           <div
