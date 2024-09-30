@@ -10,7 +10,7 @@ const Ticketschema = new mongoose.Schema({
   },
   subject: {
     type: String,
-    requried: true,
+    required: true,
   },
   message: {
     type: String,

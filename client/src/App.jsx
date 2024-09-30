@@ -23,6 +23,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LogViewer from "./pages/log";
 import Ticket from "../src/userfunctions/ticket";
+import ViewTicket from "../src/userfunctions/viewTicket";
 
 const App = () => {
   return (
@@ -52,6 +53,7 @@ const App = () => {
           <Route path="/uploadfile" element={<Imageupload />} />
           <Route path="/loggarum" element={<LogViewer />} />
           <Route path="/ticket" element={<Ticket />} />
+          <Route path="/viewTicket" element={<ViewTicket />} />
         </Routes>
       </BrowserRouter>
     </>
