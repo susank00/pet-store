@@ -14,6 +14,7 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 const bcrypt = require("bcryptjs");
+const ticketRoutes = require("./api/Ticketapi");
 
 app.use(cors());
 // app.use(express.static("public"));
@@ -67,6 +68,7 @@ function authenticateToken(req, res, next) {
 // end of secure way to get the images
 
 // this for fetching employee namewe
+app.use("/api", ticketRoutes);
 app.post("/getUserInfo", authenticateToken, (req, res) => {
   const { email } = req.body;
   EmployeeModel.findOne({ email: email })
