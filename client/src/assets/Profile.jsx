@@ -63,14 +63,15 @@ const Profile = () => {
     <>
       {localStorage.getItem("accessToken") ? (
         <>
-          <div className="flex">
+          <div className="flex ">
             {/* Main Content */}
-            <div className="flex-grow relative w-full min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 text-white flex items-center justify-center">
+
+            <div className="flex-grow  relative w-full min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 text-white flex items-center justify-center">
               {/* Background Image or Gradient */}
-              <div className="absolute inset-0 z-0 bg-hero-pattern bg-cover bg-center opacity-50"></div>
+              <div className=" absolute inset-0 z-0 bg-hero-pattern bg-cover bg-center opacity-50"></div>
               {/* Welcome Section */}
               <SideNavbar />
-              <div className="relative z-10 text-center p-8">
+              <div className="relative z-10 text-center p-8 ">
                 <h1 className="text-5xl font-extrabold animate-fadeInUp mb-4">
                   Welcome, {username}!
                 </h1>

@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LogViewer from "./pages/log";
 import Ticket from "../src/userfunctions/ticket";
 import ViewTicket from "../src/userfunctions/viewTicket";
+import ViewTicketuser from "../src/userfunctions/viewTicketuser";
 
 const App = () => {
   return (
@@ -54,6 +55,7 @@ const App = () => {
           <Route path="/loggarum" element={<LogViewer />} />
           <Route path="/ticket" element={<Ticket />} />
           <Route path="/viewTicket" element={<ViewTicket />} />
+          <Route path="/viewTicketuser" element={<ViewTicketuser />} />
         </Routes>
       </BrowserRouter>
     </>

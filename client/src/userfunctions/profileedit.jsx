@@ -173,78 +173,80 @@ const Profileedit = () => {
   };
   return (
     <>
-      <SideNavbar />
-      <div className="ml-64 relative">
-        <div className="mt-8 flex flex-col items-center space-y-4">
-          <form
-            onSubmit={handleSubmit}
-            className="w-full max-w-lg bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 "
-          >
-            <div className="flex flex-col items-center">
-              {previewImage && (
-                <div>
-                  <img
-                    className="w-48 h-48 rounded-full object-cover border-4 border-gray-300"
-                    src={previewImage} // Show preview or stored image
-                    alt="Profile Preview"
-                  />
-                </div>
-              )}
-              <input
-                className="mt-4 text-lg font-semibold"
-                type="file"
-                placeholder="Upload"
-                onChange={handleFileChange}
-                accept=".jpeg, .png, .jpg"
-              />
-            </div>
+      <div className="flex-grow  relative w-full min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 text-white flex items-center justify-center">
+        <SideNavbar />
+        <div className="ml-64 relative">
+          <div className="mt-8 flex flex-col items-center space-y-4">
+            <form
+              onSubmit={handleSubmit}
+              className="w-full max-w-lg bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 "
+            >
+              <div className="flex flex-col items-center">
+                {previewImage && (
+                  <div>
+                    <img
+                      className="w-48 h-48 rounded-full object-cover border-4 border-gray-300"
+                      src={previewImage} // Show preview or stored image
+                      alt="Profile Preview"
+                    />
+                  </div>
+                )}
+                <input
+                  className="mt-4 text-lg font-semibold"
+                  type="file"
+                  placeholder="Upload"
+                  onChange={handleFileChange}
+                  accept=".jpeg, .png, .jpg"
+                />
+              </div>
 
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Name
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Name
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
 
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Email
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Email
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
 
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                type="password"
-                // value="enter new password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Password
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                  type="password"
+                  // value="enter new password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
-            <div className="flex items-center justify-between">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                disabled={isLoading}
-              >
-                {isLoading ? "Saving..." : "Save Changes"}
-              </button>
-            </div>
-          </form>
+              <div className="flex items-center justify-between">
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </>

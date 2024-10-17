@@ -78,72 +78,74 @@ const Ticket = () => {
 
   return (
     <>
-      <SideNavbar />
-      <div className="min-h-screen flex justify-center items-center bg-gray-100">
-        <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-6 text-center">
-            Create a Ticket
-          </h2>
+      <div className="flex-grow  relative w-full min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 text-white  ">
+        <SideNavbar />
+        <div className="min-h-screen flex justify-center items-center bg-gray-100">
+          <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+            <h2 className="text-2xl font-bold mb-6 text-center">
+              Create a Ticket
+            </h2>
 
-          {responseMessage && (
-            <div
-              className={`text-center mb-4 ${
-                responseMessage.includes("Error")
-                  ? "text-red-500"
-                  : "text-green-500"
-              }`}
-            >
-              {responseMessage}
-            </div>
-          )}
+            {responseMessage && (
+              <div
+                className={`text-center mb-4 ${
+                  responseMessage.includes("Error")
+                    ? "text-red-500"
+                    : "text-green-500"
+                }`}
+              >
+                {responseMessage}
+              </div>
+            )}
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Ticket Title</label>
-              <input
-                type="text"
-                name="tickettitle"
-                value={ticket.tickettitle}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter ticket title"
-                required
-              />
-            </div>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Ticket Title</label>
+                <input
+                  type="text"
+                  name="tickettitle"
+                  value={ticket.tickettitle}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter ticket title"
+                  required
+                />
+              </div>
 
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Subject</label>
-              <input
-                type="text"
-                name="subject"
-                value={ticket.subject}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter subject"
-                required
-              />
-            </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Subject</label>
+                <input
+                  type="text"
+                  name="subject"
+                  value={ticket.subject}
+                  onChange={handleChange}
+                  className="w-full text-gray-700 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter subject"
+                  required
+                />
+              </div>
 
-            <div className="mb-6">
-              <label className="block text-gray-700 mb-2">Message</label>
-              <textarea
-                name="message"
-                value={ticket.message}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Write your message"
-                rows="4"
-                required
-              />
-            </div>
+              <div className="mb-6">
+                <label className="block text-gray-700 mb-2">Message</label>
+                <textarea
+                  name="message"
+                  value={ticket.message}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Write your message"
+                  rows="4"
+                  required
+                />
+              </div>
 
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none"
-            >
-              Submit Ticket
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none"
+              >
+                Submit Ticket
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>

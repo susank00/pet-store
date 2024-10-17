@@ -50,50 +50,61 @@ const PurchaseHistory = () => {
 
   return (
     <>
-      <SideNavbar />
-      <div className="ml-64 relative overflow-x-auto">
-        <h1 className="bg-gray-600 text-5xl text-red-600 text-center p-2">
-          Purchase History
-        </h1>
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th className="py-2 px-4 border">User ID</th>
-              <th className="py-2 px-4 border">Product ID</th>
-              <th className="py-2 px-4 border">TransactionID</th>
+      <div className="flex ">
+        {/* className="fixed flex h-screen" className="ml-64 fixed overflow-x-auto" */}
+        <div className="flex-grow  relative w-full min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 text-white  ">
+          <SideNavbar />
+          <div className="ml-64 relative overflow-x-auto">
+            <h1 className="bg-gray-600 text-5xl text-red-600 text-center p-2">
+              Purchase History
+            </h1>
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th className="py-2 px-4 border">User ID</th>
+                  <th className="py-2 px-4 border">Product ID</th>
+                  <th className="py-2 px-4 border">TransactionID</th>
 
-              <th className="py-2 px-4 border">Product Name</th>
-              <th className="py-2 px-4 border">Price</th>
-              <th className="py-2 px-4 border">Status</th>
-              <th className="py-2 px-4 border">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {purchaseHistory.length > 0 ? (
-              purchaseHistory.map((purchase, index) => (
-                <tr
-                  key={index}
-                  className="bg-grey-50 border-b dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white"
-                >
-                  <td className="py-2 px-4 border">{purchase.userId}</td>
-                  <td className="py-2 px-4 border">{purchase.productId}</td>
-                  <td className="py-2 px-4 border">{purchase.transactionId}</td>
-
-                  <td className="py-2 px-4 border">{purchase.productName}</td>
-                  <td className="py-2 px-4 border">{purchase.price} Rs</td>
-                  <td className="py-2 px-4 border">{purchase.status}</td>
-                  <td className="py-2 px-4 border">{purchase.purchaseDate}</td>
+                  <th className="py-2 px-4 border">Product Name</th>
+                  <th className="py-2 px-4 border">Price</th>
+                  <th className="py-2 px-4 border">Status</th>
+                  <th className="py-2 px-4 border">Date</th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="py-2 px-4 text-center">
-                  No purchase history available.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {purchaseHistory.length > 0 ? (
+                  purchaseHistory.map((purchase, index) => (
+                    <tr
+                      key={index}
+                      className="bg-grey-50 border-b dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white"
+                    >
+                      <td className="py-2 px-4 border">{purchase.userId}</td>
+                      <td className="py-2 px-4 border">{purchase.productId}</td>
+                      <td className="py-2 px-4 border">
+                        {purchase.transactionId}
+                      </td>
+
+                      <td className="py-2 px-4 border">
+                        {purchase.productName}
+                      </td>
+                      <td className="py-2 px-4 border">{purchase.price} Rs</td>
+                      <td className="py-2 px-4 border">{purchase.status}</td>
+                      <td className="py-2 px-4 border">
+                        {purchase.purchaseDate}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="py-2 px-4 text-center">
+                      No purchase history available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </>
   );
