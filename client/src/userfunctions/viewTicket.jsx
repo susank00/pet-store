@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import SideNavbar from "../components/SideNavbar";
 import { io } from "socket.io-client"; // Import socket.io-client
-const socket = io(import.meta.env.VITE_API_URL_PROD_API_URL); // Connect to the backend
+const socket = io(import.meta.env.VITE_API_URL_PROD_API_URL, {
+  transports: ["polling"], // This forces the use of polling
+}); // Connect to the backend
 
 const ViewTicket = () => {
   const [tickets, setTickets] = useState([]);

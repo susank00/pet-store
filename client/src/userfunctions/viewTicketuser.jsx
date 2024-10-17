@@ -4,7 +4,9 @@ import axios from "axios";
 import SideNavbar from "../components/SideNavbar";
 import io from "socket.io-client";
 
-const socket = io(import.meta.env.VITE_API_URL_PROD_API_URL); // Connect to the Socket.IO server
+const socket = io(import.meta.env.VITE_API_URL_PROD_API_URL, {
+  transports: ["polling"], // This forces the use of polling
+}); // Connect to the Socket.IO server
 
 const ViewTicketuser = () => {
   const [tickets, setTickets] = useState([]);

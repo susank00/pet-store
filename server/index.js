@@ -15,7 +15,26 @@ const app = express();
 app.use(express.json());
 const bcrypt = require("bcryptjs");
 const ticketRoutes = require("./api/Ticketapi");
+const http = require("http");
+const socketIo = require("socket.io");
+const server = http.createServer(app);
+server.timeout = 120000;
+// const io = socketIo(server); // Initialize Socket.IO
+const io = socketIo(server, {
+  cors: {
+    origin: "*", // Allow all origins
+    methods: ["*"], // Specify allowed HTTP methods
+    allowedHeaders: ["Content-Type"], // Specify allowed headers if needed
+  },
+});
+io.on("connection", (socket) => {
+  console.log("socket initalized");
 
+  // Handle disconnection
+  socket.on("disconnect", () => {
+    console.log("socket disconnected");
+  });
+});
 app.use(cors());
 // app.use(express.static("public"));
 app.use("/public", express.static(path.join(__dirname, "public")));
@@ -68,7 +87,7 @@ function authenticateToken(req, res, next) {
 // end of secure way to get the images
 
 // this for fetching employee namewe
-app.use("/api", ticketRoutes);
+app.use("/api", ticketRoutes(io));
 app.post("/getUserInfo", authenticateToken, (req, res) => {
   const { email } = req.body;
   EmployeeModel.findOne({ email: email })
@@ -1089,7 +1108,11 @@ app.get("/get-logs", async (req, res) => {
     res.status(500).send("Error fetching logs");
   }
 });
-app.listen(3001, () => {
-  console.log("server is ruuninng");
+// app.listen(3001, () => {
+//   console.log("server is ruuninng");
+// });
+server.listen(3001, () => {
+  console.log("Server running on port for socket also");
 });
 // end >>>>>>>>>>>>>>>>
+module.exports = io;

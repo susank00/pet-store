@@ -29,6 +29,7 @@
     "path": "^0.12.7",
     "semver": "^7.6.3",
     "server": "file:",
+    "socket.io": "^4.8.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
