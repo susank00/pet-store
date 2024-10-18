@@ -6,10 +6,13 @@ const AdminUserEdit = () => {
   const [showForm, setShowForm] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "",
+  });
+  const [originalData, setOriginalData] = useState({});
 
   const selectedEmployeesId = useSelector(
     (state) => state.reducer.selectedEmployeesId
@@ -29,10 +32,9 @@ const AdminUserEdit = () => {
             import.meta.env.VITE_API_URL_PROD_API_URL
           }/employeeNames/${selectedEmployeesId}`
         );
-        setName(response.data.name);
-        setEmail(response.data.email);
-        setPassword(response.data.password);
-        setRole(response.data.role);
+        const { name, email, password, role } = response.data;
+        setFormData({ name, email, password, role });
+        setOriginalData({ name, email, password, role }); // Store the original data for comparison
       } catch (error) {
         setError(error.message);
       } finally {
@@ -46,43 +48,47 @@ const AdminUserEdit = () => {
   }, [selectedEmployeesId]);
 
   const handleClose = () => {
-    setName("");
-    setEmail("");
-    setPassword("");
-    setRole("");
     setShowForm(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("role", role);
-    setIsLoading(true);
-    try {
-      const response = await axios.put(
-        `${
-          import.meta.env.VITE_API_URL_PROD_API_URL
-        }/employeeNames/${selectedEmployeesId}`,
-        {
-          name,
-          email,
-          password,
-          role,
-        }
-      );
-      setName(response.data.name);
-      setEmail(response.data.email);
-      setPassword(response.data.password);
-      setRole(response.data.role);
-      console.log("User updated successfully:", response.data);
-      setShowForm(false);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
+
+    // Check if any field has changed compared to the original data
+    const updatePayload = {};
+    for (let key in formData) {
+      if (formData[key] !== originalData[key]) {
+        updatePayload[key] = formData[key];
+      }
+    }
+
+    // Only proceed with update if there's any change
+    if (Object.keys(updatePayload).length > 0) {
+      setIsLoading(true);
+      try {
+        const response = await axios.put(
+          `${
+            import.meta.env.VITE_API_URL_PROD_API_URL
+          }/employeeNames/${selectedEmployeesId}`,
+          updatePayload
+        );
+        console.log("User updated successfully:", response.data);
+        setShowForm(false);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      console.log("No changes detected.");
     }
   };
 
@@ -123,7 +129,7 @@ const AdminUserEdit = () => {
   }, [dragging]);
 
   if (isLoading) {
-    return <p>Loadingss</p>;
+    return <p>Loading...</p>;
   }
 
   if (error) {
@@ -135,8 +141,8 @@ const AdminUserEdit = () => {
       {showForm && (
         <div
           ref={formRef}
-          className="absolute w-6/12 rounded-lg p-4 mt-8 bg-gray-800 z-15 "
-          style={{ transform: `translate(${position.x}px, ${position.y}px)` }} // Apply position
+          className="absolute w-6/12 rounded-lg p-4 mt-8 bg-gray-800 z-15"
+          style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
         >
           <div
             className="cursor-move bg-gray-800 text-white p-2"
@@ -152,7 +158,7 @@ const AdminUserEdit = () => {
             >
               CLOSE
             </button>
-            <h2 className=" text-center text-2xl ">Update User</h2>
+            <h2 className="text-center text-2xl">Update User</h2>
 
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
@@ -167,8 +173,9 @@ const AdminUserEdit = () => {
                 <input
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="mb-3">
@@ -178,8 +185,9 @@ const AdminUserEdit = () => {
                 <input
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="mb-3">
@@ -189,8 +197,9 @@ const AdminUserEdit = () => {
                 <input
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="mb-3">
@@ -200,12 +209,13 @@ const AdminUserEdit = () => {
                 <input
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   type="text"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                  name="role"
+                  value={formData.role}
+                  onChange={handleInputChange}
                 />
               </div>
               <button
-                onClick={handleSubmit}
+                type="submit"
                 className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 mt-4"
               >
                 Update User
