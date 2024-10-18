@@ -111,15 +111,22 @@ const Profileedit = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const formData = new FormData();
-    formData.append("name", username);
-    formData.append("email", email);
-    formData.append("password", password);
-
     // Variable to track if the image upload was successful
     let newImageUploaded = false;
+    const updatedFields = {};
 
-    // Upload to Firebase and delete the old image if needed
+    // Compare each field and only include it if it was modified
+    if (username !== employee?.name) {
+      updatedFields.name = username;
+    }
+    if (email !== employee?.email) {
+      updatedFields.email = email;
+    }
+    if (password !== employee?.password) {
+      updatedFields.password = password;
+    }
+
+    // Handle image upload if there's a new file
     if (file) {
       const timestamp = Date.now();
       const fileExtension = getFileExtension(file.name);
@@ -130,10 +137,10 @@ const Profileedit = () => {
         const imageRef = ref(storage, `profileImages/${UserId}/${newFileName}`);
         await uploadBytes(imageRef, file);
         const downloadURL = await getDownloadURL(imageRef);
-        console.log("Uploaded Image URL: ", downloadURL);
+        // console.log("Uploaded Image URL: ", downloadURL);
 
         // Append the generated file name for backend
-        formData.append("image", newFileName);
+        updatedFields.image = newFileName;
         newImageUploaded = true; // Mark that the new image was uploaded
       } catch (error) {
         console.error("Error uploading the image:", error);
@@ -143,10 +150,16 @@ const Profileedit = () => {
       }
     }
 
+    if (Object.keys(updatedFields).length === 0) {
+      alert("No changes to update.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL_PROD_API_URL}/employeeNames/${UserId}`,
-        formData
+        updatedFields
       );
       setEmployee(response.data);
       setFile(null);
@@ -161,7 +174,7 @@ const Profileedit = () => {
             `profileImages/${UserId}/${oldImageName}`
           );
           await deleteObject(oldImageRef);
-          console.log("Old image deleted successfully.");
+          // console.log("Old image deleted successfully.");
         }
       }
     } catch (error) {
@@ -171,6 +184,7 @@ const Profileedit = () => {
       setIsLoading(false);
     }
   };
+
   return (
     <>
       <div className="flex-grow  relative w-full min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 text-white flex items-center justify-center">
@@ -231,7 +245,8 @@ const Profileedit = () => {
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                   type="password"
-                  // value="enter new password"
+                  // value={password}
+                  placeholder="enter new password"
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
