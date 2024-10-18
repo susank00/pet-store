@@ -19,11 +19,12 @@ const http = require("http");
 const socketIo = require("socket.io");
 const server = http.createServer(app);
 server.timeout = 120000;
+
 // const io = socketIo(server); // Initialize Socket.IO
 const io = socketIo(server, {
   cors: {
     origin: "*", // Allow all origins
-    methods: ["*"], // Specify allowed HTTP methods
+    methods: "*", // Specify allowed HTTP methods
     allowedHeaders: ["Content-Type"], // Specify allowed headers if needed
   },
 });
@@ -1115,4 +1116,3 @@ server.listen(3001, () => {
   console.log("Server running on port for socket also");
 });
 // end >>>>>>>>>>>>>>>>
-module.exports = io;

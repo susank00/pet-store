@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Ticket = require("../models/Ticket"); // Import the Ticket model
-const { io } = require("../index"); // Import io from your main server file
+const io = require("socket.io"); // Import io from your main server file
 const ticketRoutes = (io) => {
   // POST: Create a new ticket
   router.post("/ticket", async (req, res) => {
