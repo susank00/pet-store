@@ -4,7 +4,7 @@ import axios from "axios";
 import SideNavbar from "../components/SideNavbar";
 import io from "socket.io-client";
 
-const socket = io(import.meta.env.VITE_API_URL_PROD_API_URL, {
+const socket = io(import.meta.env.VITE_API_URL_PROD_API_URL_TICKET_RENDER, {
   transports: ["polling"], // This forces the use of polling
 }); // Connect to the Socket.IO server
 
@@ -31,7 +31,7 @@ const ViewTicketuser = () => {
         try {
           const response = await axios.get(
             `${
-              import.meta.env.VITE_API_URL_PROD_API_URL
+              import.meta.env.VITE_API_URL_PROD_API_URL_TICKET_RENDER
             }/api/tickets/user/${userId}`
           );
           setTickets(response.data);
@@ -73,7 +73,7 @@ const ViewTicketuser = () => {
     try {
       await axios.post(
         `${
-          import.meta.env.VITE_API_URL_PROD_API_URL
+          import.meta.env.VITE_API_URL_PROD_API_URL_TICKET_RENDER
         }/api/tickets/${ticketId}/reply`,
         {
           message: replyMessage[ticketId],

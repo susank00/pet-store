@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import SideNavbar from "../components/SideNavbar";
 import { io } from "socket.io-client"; // Import socket.io-client
-const socket = io(import.meta.env.VITE_API_URL_PROD_API_URL, {
+const socket = io(import.meta.env.VITE_API_URL_PROD_API_URL_TICKET_RENDER, {
   transports: ["polling"], // This forces the use of polling
 }); // Connect to the backend
 
@@ -20,7 +20,9 @@ const ViewTicket = () => {
     const fetchTickets = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/tickets`
+          `${
+            import.meta.env.VITE_API_URL_PROD_API_URL_TICKET_RENDER
+          }/api/tickets`
         );
         setTickets(response.data);
       } catch (err) {
@@ -65,7 +67,7 @@ const ViewTicket = () => {
     try {
       await axios.post(
         `${
-          import.meta.env.VITE_API_URL_PROD_API_URL
+          import.meta.env.VITE_API_URL_PROD_API_URL_TICKET_RENDER
         }/api/tickets/${ticketId}/reply`,
         {
           message: reply,
@@ -78,7 +80,7 @@ const ViewTicket = () => {
       setSelectedTicketId(null);
 
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/tickets`
+        `${import.meta.env.VITE_API_URL_PROD_API_URL_TICKET_RENDER}/api/tickets`
       );
       setTickets(response.data);
 
@@ -97,13 +99,13 @@ const ViewTicket = () => {
     try {
       await axios.put(
         `${
-          import.meta.env.VITE_API_URL_PROD_API_URL
+          import.meta.env.VITE_API_URL_PROD_API_URL_TICKET_RENDER
         }/api/tickets/${ticketId}/status`,
         { status: newStatus }
       );
 
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL_PROD_API_URL}/api/tickets`
+        `${import.meta.env.VITE_API_URL_PROD_API_URL_TICKET_RENDER}/api/tickets`
       );
       setTickets(response.data);
 
