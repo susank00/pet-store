@@ -7,13 +7,15 @@ import { storage } from "../../firebaseConfig"; // Import Firebase storage
 
 const Products = () => {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]); // Filtered products based on dropdown
-  const [filter, setFilter] = useState("available"); // Set default filter to 'available'
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filter, setFilter] = useState("available");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const [UserId, setUserId] = useState(null);
-  const [productImages, setProductImages] = useState({}); // Store images by product ID
+  const [productImages, setProductImages] = useState({});
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const productsPerPage = 10; // Number of products per page
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -32,7 +34,6 @@ const Products = () => {
         setProducts(response.data);
         filterProducts(response.data, filter); // Apply filter when products are fetched
 
-        // Fetch images for each product
         response.data.forEach(async (product) => {
           if (product.image) {
             const imageRef = ref(storage, `productimages/${product.image}`);
@@ -41,7 +42,7 @@ const Products = () => {
               setProductImages((prev) => ({
                 ...prev,
                 [product._id]: downloadURL,
-              })); // Store image URL by product ID
+              }));
             } catch (err) {
               console.error(
                 `Error fetching image for product ${product._id}:`,
@@ -56,9 +57,8 @@ const Products = () => {
     };
 
     fetchProducts();
-  }, [UserId, filter]); // Fetch products when the filter changes
+  }, [UserId, filter]);
 
-  // Function to filter products based on selected option
   const filterProducts = (products, filter) => {
     if (filter === "available") {
       setFilteredProducts(products.filter((product) => product.quantity > 0));
@@ -71,9 +71,9 @@ const Products = () => {
     } else {
       setFilteredProducts(products); // Show all products
     }
+    setCurrentPage(1); // Reset to page 1 whenever filter changes
   };
 
-  // Handle the dropdown change
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
     filterProducts(products, event.target.value);
@@ -116,6 +116,27 @@ const Products = () => {
     }
   };
 
+  // Get the current products to display based on the current page
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  // Handle "Next" and "Previous" button clicks
+  const nextPage = () => {
+    if (currentPage < Math.ceil(filteredProducts.length / productsPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
     <div className="bg-gradient-to-br from-blue-300 to-purple-300 min-h-screen p-4">
       <div className="container mx-auto">
@@ -140,8 +161,9 @@ const Products = () => {
           </select>
         </div>
 
+        {/* Display current page of products */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {filteredProducts.map((product) => (
+          {currentProducts.map((product) => (
             <div
               key={product._id}
               className="relative group bg-gradient-to-br from-pink-500 to-indigo-500 p-6 rounded-xl shadow-2xl overflow-hidden transition-all duration-500 transform hover:scale-105 hover:shadow-neon"
@@ -173,13 +195,6 @@ const Products = () => {
                     Price: Rs. {product.price}
                   </p>
                 </div>
-                {/* <button
-                  type="button"
-                  className="w-full py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-lg font-semibold hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 transform hover:scale-105 shadow-neon hover:shadow-pink-600/50"
-                  onClick={() => handleBuy(product)}
-                >
-                  Buy Now
-                </button> */}
                 <button
                   type="button"
                   className={`w-full py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-neon ${
@@ -188,13 +203,45 @@ const Products = () => {
                       : "cursor-not-allowed opacity-50"
                   }`}
                   onClick={() => handleBuy(product)}
-                  disabled={product.quantity <= 0 || product.quantity === null} // Disable if quantity is 0 or null
+                  disabled={product.quantity <= 0 || product.quantity === null}
                 >
                   {product.quantity > 0 ? "Buy Now" : "Out of Stock"}
                 </button>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Pagination buttons */}
+        <div className="flex justify-center items-center mt-8 space-x-4">
+          <button
+            className={`py-2 px-4 rounded-lg bg-white text-black ${
+              currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={prevPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span className="text-white text-lg">
+            Page {currentPage} of{" "}
+            {Math.ceil(filteredProducts.length / productsPerPage)}
+          </span>
+          <button
+            className={`py-2 px-4 rounded-lg bg-white text-black ${
+              currentPage ===
+              Math.ceil(filteredProducts.length / productsPerPage)
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
+            onClick={nextPage}
+            disabled={
+              currentPage ===
+              Math.ceil(filteredProducts.length / productsPerPage)
+            }
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>
